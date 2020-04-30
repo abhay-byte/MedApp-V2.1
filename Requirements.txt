@@ -1,0 +1,14 @@
+pandas
+numpy
+scikit_learn
+scipy
+joblib
+kivy
+pyrebase
+tensorflow==1.12.0
+tqdm
+colorama
+regex
+python-Levenshtein-wheels
+requests
+db-sqlite3

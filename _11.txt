@@ -1,0 +1,4 @@
+headache
+fever
+cold
+nausea
