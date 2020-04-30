@@ -11,13 +11,14 @@ Installation
 Use Python Version 3.6+. Donot use the Latest Version. Be at 3.6 .<br/>
 Make sure you have already Git LFS to download the content. Link is given below.<br/>
 
-Download for Windows : ```https://github.com/abhay-byte/MedApp-V1.9```
+Download Git LFS for Windows : https://packagecloud.io/github/git-lfs/install<br/>
+Download Git LFS for Linux : https://github.com/git-lfs/git-lfs/releases/download/v2.10.0/git-lfs-linux-amd64-v2.10.0.tar.gz
 
-Now type ```git lfs install``` in cmd.
+Now you have to type ```git lfs install``` in cmd.
 
-Now Type ```git clone --recursive https://github.com/abhay-byte/MedApp-V1.9``` in you CMD or Terminal(In Linux). Make sure where you want to install this by changing Dir cd. Or it will be Installed in System32 in Windows.<br/>  
+Then type ```git clone --recursive https://github.com/abhay-byte/MedApp-V1.9``` in you CMD or Terminal(In Linux). Make sure where you want to install this by changing Dir cd. Or it will be Installed in System32 in Windows.<br/>  
 
-Now you have to Install all the libraries it requires to run. Change the Directory to Where the MedApp Is located in CMD or Terminal and Simply type in cmd,
+After that you have to Install all the libraries it requires to run. Change the Directory to Where the MedApp Is located in CMD or Terminal and Simply type in cmd,
 
 ```pip install -r Requirements.txt```
 
