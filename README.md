@@ -25,6 +25,21 @@ You are ready TO run the APP.
 
 Run Main.py
 
+Result of DocBot (Emotion State Enhancer)
+----------------------------------------
+![RE](/Screenshots/Captsure.PNG)
+
+I think that Alveron's IQ is below 10. Not anwsering properly as my OPTIMISTIC mind thought.
+
+Screenshots
+-----------
+![RE](/Screenshots/Capture.PNG)
+![RE](/Screenshots/Capture1.PNG)
+![RE](/Screenshots/Capture2.PNG)
+![RE](/Screenshots/Capture3.PNG)
+![RE](/Screenshots/Capture4.PNG)
+![RE](/Screenshots/Capture5.PNG)
+
 Updates
 -------
 -Update 1.9 >>> DocBot Added NMT Model.<br />
