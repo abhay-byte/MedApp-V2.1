@@ -8,7 +8,8 @@ The Authentication system and DataBase is made with Google's FireBase.
 
 Installation
 ------------
-Use Python Version 3.6+. Donot use the Latest Version. Be at 3.6 .<br />
+Use Python Version 3.6+. Donot use the Latest Version. Be at 3.6 .<br/>
+Make sure you have already installed GitHub and Git LFS to download the content.<br/>
 
 Now Type This in you CMD or Terminal(In Linux). Make sure where you want to install this by changing Dir cd. Or it will be Installed in System32 in Windows.<br/>
 
