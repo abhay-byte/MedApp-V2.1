@@ -1,8 +1,8 @@
 # MedApp-V1.9
 Introduction
 ------------
-In this app you can predict your disease by giving the sympmtom that the person is suffering.
-The UI of this app is created using kivy. The prediction of the disease is done using Machine Learing.
+In this app you can predict your disease by giving the symptom that the person is suffering.
+The UI of this app is created using kivy. The prediction of the disease is done using Machine Learning.
 You can also talk to alveron The Docbot who is a Emotion State Enhancer ChatBot.
 The Authentication system and DataBase is made with Google's FireBase.
 
