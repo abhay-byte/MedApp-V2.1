@@ -18,10 +18,11 @@ Now you have to Install all the libraries it requires to run. Change the Directo
 
 ```pip install -r Requirements.txt```
 
-To Install every library it MedApp requires.
+To Install every library MedApp requires.
 
 You are ready TO run the APP.
 
+Run Main.py
 
 Updates
 -------
