@@ -9,19 +9,21 @@ The Authentication system and DataBase is made with Google's FireBase.
 Installation
 ------------
 Use Python Version 3.6+. Donot use the Latest Version. Be at 3.6 .<br/>
-Make sure you have already installed GitHub and Git LFS to download the content.<br/>
+Make sure you have already Git LFS to download the content. Link is given below.<br/>
 
-Now Type This in you CMD or Terminal(In Linux). Make sure where you want to install this by changing Dir cd. Or it will be Installed in System32 in Windows.<br/>
+Download for Windows : ```https://github.com/abhay-byte/MedApp-V1.9```
 
-```git clone --recursive https://github.com/abhay-byte/MedApp-V1.9```  
+Now type ```git lfs install``` in cmd.
 
-Now you have to Install all the libraries it requires to run. Change the Directory to Where the MedApp Is located in CMD or Terminal</br>And Simply type in cmd,
+Now Type ```git clone --recursive https://github.com/abhay-byte/MedApp-V1.9``` in you CMD or Terminal(In Linux). Make sure where you want to install this by changing Dir cd. Or it will be Installed in System32 in Windows.<br/>  
+
+Now you have to Install all the libraries it requires to run. Change the Directory to Where the MedApp Is located in CMD or Terminal and Simply type in cmd,
 
 ```pip install -r Requirements.txt```
 
 To Install every library MedApp requires.
 
-You are ready TO run the APP.
+You are ready to run the MedApp.
 
 Run Main.py
 
