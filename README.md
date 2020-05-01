@@ -36,7 +36,7 @@ I think that Alveron's IQ is below 10. Not anwsering properly as my OPTIMISTIC m
 
 Screenshots
 -----------
-![RE](/Screenshots/Capture.PNG)
+![RE](/Screenshots/Capture0.PNG)
 ![RE](/Screenshots/Capture1.PNG)
 ![RE](/Screenshots/Capture2.PNG)
 ![RE](/Screenshots/Capture3.PNG)
