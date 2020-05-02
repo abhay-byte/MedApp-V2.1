@@ -1,4 +1,4 @@
-# MedApp-V1.9
+# MedApp-V2.0
 Introduction
 ------------
 In this app you can predict your disease by giving the symptom that the person is suffering.
