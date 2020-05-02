@@ -30,7 +30,7 @@ Run Main.py
 
 Result of DocBot (Emotion State Enhancer)
 ----------------------------------------
-![RE](/Screenshots/Captsure.PNG)
+![RE](/Screenshots/Capture.PNG)
 
 I think that Alveron's IQ is below 10. Not anwsering properly as my OPTIMISTIC mind thought.
 
