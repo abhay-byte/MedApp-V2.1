@@ -36,15 +36,22 @@ I think that Alveron's IQ is below 10. Not anwsering properly as my OPTIMISTIC m
 
 Screenshots
 -----------
-![RE](/Screenshots/Capture0.PNG)
-![RE](/Screenshots/Capture1.PNG)
-![RE](/Screenshots/Capture2.PNG)
-![RE](/Screenshots/Capture3.PNG)
-![RE](/Screenshots/Capture4.PNG)
-![RE](/Screenshots/Capture5.PNG)
+![RE](/Screenshots/1.PNG)
+![RE](/Screenshots/2.PNG)
+![RE](/Screenshots/3.PNG)
+![RE](/Screenshots/4.PNG)
+![RE](/Screenshots/5.PNG)
+![RE](/Screenshots/6.PNG)
+![RE](/Screenshots/7.PNG)
+![RE](/Screenshots/8.PNG)
+![RE](/Screenshots/9.PNG)
+![RE](/Screenshots/10.PNG)
+![RE](/Screenshots/11.PNG)
+![RE](/Screenshots/12.PNG)
 
 Updates
 -------
+-Update 2.0 >>> Added Graphics to UI.
 -Update 1.9 >>> DocBot Added NMT Model.<br />
 -Update 1.8 >>> SQL User Database System Added.<br />
 -Update 1.7 >>> Improved Diagnosis Result Algorithm.<br />
