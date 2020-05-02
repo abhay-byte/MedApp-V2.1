@@ -51,7 +51,7 @@ Screenshots
 
 Updates
 -------
--Update 2.0 >>> Added Graphics to UI.
+-Update 2.0 >>> Added Graphics to UI.<br/>
 -Update 1.9 >>> DocBot Added NMT Model.<br />
 -Update 1.8 >>> SQL User Database System Added.<br />
 -Update 1.7 >>> Improved Diagnosis Result Algorithm.<br />
