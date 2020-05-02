@@ -24,6 +24,7 @@ After that you have to Install all the libraries it requires to run. Change the 
 
 To Install every library MedApp requires.
 
+Set up your firebase account and add firebase config to main.py.<br/>
 You are ready to run the MedApp.
 
 Run Main.py
