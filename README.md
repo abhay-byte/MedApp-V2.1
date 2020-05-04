@@ -33,10 +33,8 @@ Setting
 -------
 Can run in the following aspect ratio:<br/>
 
-16:9-1920x1080<br/>
-16:9-1280x720<br/>
-4:3-800x600<br/>
-16:9-640x360<br/>
+16:9 - 1920x1080 - 1280x720 - 640x360
+4:3 - 800x600 <br/>
 
 The size of the MedApp with installed Git LFS is about 300mb+. You will have to download about 300mb+. Normal Git clone will only download required files to run MedApp which is about 10mb+. You can also download the MedApp without Git LFS, but it will not contain the docbot data file. So you will not be able to use docbot, but can use every other feature. 
 
