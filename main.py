@@ -1,5 +1,7 @@
 from kivy.config import Config
 Config.set('graphics','resizable',False)
+from kivy.core.window import Window
+Window.size = (800,600)
 
 import pyrebase
 import datetime
