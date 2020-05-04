@@ -6,10 +6,21 @@ The UI of this app is created using kivy. The prediction of the disease is done 
 You can also talk to alveron The Docbot who is a Emotion State Enhancer ChatBot.
 The Authentication system and DataBase is made with Google's FireBase.
 
+Setting
+-------
+Can run in the following aspect ratio:<br/>
+
+16:9-1920x1080<br/>
+16:9-1280x720<br/>
+4:3-800x600<br/>
+16:9-640x360<br/>
+
+The size of the MedApp with installed Git LFS is about 300mb+. You will have to download about 300mb+. Normal Git clone will only download required files to run Docbot which is about 10mb+. You can also download the MedApp without Git LFS, but it will not contain the docbot data file. So you will not be able to use docbot, but can use every other feature. 
+
 Installation
 ------------
 Use Python Version 3.6+. Donot use the Latest Version. Be at 3.6 .<br/>
-Make sure you have already Git LFS to download the content. Link is given below.<br/>
+Make sure you have already Git LFS to download the extra content of docbot. You can also skip this step to not download docbot data file. Link is given below.<br/>
 
 Download Git LFS for Windows : https://packagecloud.io/github/git-lfs/install<br/>
 Download Git LFS for Linux : https://github.com/git-lfs/git-lfs/releases/download/v2.10.0/git-lfs-linux-amd64-v2.10.0.tar.gz
