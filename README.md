@@ -38,7 +38,7 @@ Can run in the following aspect ratio:<br/>
 4:3-800x600<br/>
 16:9-640x360<br/>
 
-The size of the MedApp with installed Git LFS is about 300mb+. You will have to download about 300mb+. Normal Git clone will only download required files to run Docbot which is about 10mb+. You can also download the MedApp without Git LFS, but it will not contain the docbot data file. So you will not be able to use docbot, but can use every other feature. 
+The size of the MedApp with installed Git LFS is about 300mb+. You will have to download about 300mb+. Normal Git clone will only download required files to run MedApp which is about 10mb+. You can also download the MedApp without Git LFS, but it will not contain the docbot data file. So you will not be able to use docbot, but can use every other feature. 
 
 Result of DocBot (Emotion State Enhancer)
 ----------------------------------------
