@@ -61,9 +61,10 @@ Screenshots
 
 Mobile Version
 --------------
-![RE](/Screenshots/12.PNG)
-
-![RE](/Screenshots/12.PNG)
+![RE](/Screenshots/10.png)
+![RE](/Screenshots/11.png)
+![RE](/Screenshots/12.png)
+![RE](/Screenshots/13.png)
 
 Upcoming Update
 ---------------
