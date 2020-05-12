@@ -59,6 +59,12 @@ Screenshots
 ![RE](/Screenshots/11.PNG)
 ![RE](/Screenshots/12.PNG)
 
+Mobile Version
+--------------
+![RE](/Screenshots/12.PNG)
+
+![RE](/Screenshots/12.PNG)
+
 Upcoming Update
 ---------------
 Fixing Diagnosis Error
