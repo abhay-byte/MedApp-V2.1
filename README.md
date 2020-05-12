@@ -59,17 +59,21 @@ Screenshots
 ![RE](/Screenshots/11.PNG)
 ![RE](/Screenshots/12.PNG)
 
-Updates
+Upcoming Update
+---------------
+Fixing Diagnosis Error
+
+Changelog
 -------
--Update 2.0 >>> Added Graphics to UI.<br/>
--Update 1.9 >>> DocBot Added NMT Model.<br />
--Update 1.8 >>> SQL User Database System Added.<br />
--Update 1.7 >>> Improved Diagnosis Result Algorithm.<br />
--Update 1.6 >>> Fixed Several Bugs From Authentication.<br />
--Update 1.5 >>> Fixed Screen Error.<br />
--Update 1.4 >>> Fixed Bugs in Record Page.<br />
--Update 1.3 >>> Fixed Diagnosis Page ERROR.<br />
--Update 1.2 >>> Fixed Bugs in Account Page.<br />
--Update 1.1 >>> Added Firebase Authentication system, DataBase, Account Page and Record Page .<br />
--Update 1.0 >>> Added UI To MedApp.<br />
--Version 0.1 >>> Created Disease Prediction Using ML.<br />
+-Changelog 2.0 >>> Added Graphics to UI.<br/>
+-Changelog 1.9 >>> DocBot Added NMT Model.<br />
+-Changelog 1.8 >>> SQL User Database System Added.<br />
+-Changelog 1.7 >>> Improved Diagnosis Result Algorithm.<br />
+-Changelog 1.6 >>> Fixed Several Bugs From Authentication.<br />
+-Changelog 1.5 >>> Fixed Screen Error.<br />
+-Changelog 1.4 >>> Fixed Bugs in Record Page.<br />
+-Changelog 1.3 >>> Fixed Diagnosis Page ERROR.<br />
+-Changelog 1.2 >>> Fixed Bugs in Account Page.<br />
+-Changelog 1.1 >>> Added Firebase Authentication system, DataBase, Account Page and Record Page .<br />
+-Changelog 1.0 >>> Added UI To MedApp.<br />
+-Changelog 0.1 >>> Created Disease Prediction Using ML.<br />
