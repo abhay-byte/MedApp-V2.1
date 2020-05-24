@@ -1,5 +1,5 @@
 from kivy.config import Config
-Config.set('graphics','resizable',False)
+#Config.set('graphics','resizable',False)
 from kivy.core.window import Window
 Window.size = (800,600)
 
@@ -16,7 +16,6 @@ from kivy.uix.image import Image
 from kivy.uix.label import Label
 from kivy.uix.widget import Widget
 from kivy.uix.button import Button
-from kivy.core.window import Window
 from kivy.uix.textinput import TextInput
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.scrollview import ScrollView
@@ -31,7 +30,64 @@ from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor
 from Data.inference import inference
 
+def word_search(doc_list, keyword):
+    keyword=keyword.lower()
+    l=len(keyword)
+    c=0
+    f=[]
+    v=0
+    for i in range(len(doc_list)):
+        a=doc_list[i]
+        a=a.split()
+        for j in range(len(a)):
+            c=0
+            v=0
+            for p in range(len(a[j])):
+                b=a[j]
+                if b[p]=="," or b[p]==".":
+                    v=len(a[j])-1
+            if l==len(a[j]) or l==v:
+                for k in range(l):
+                    b=a[j]
+                    b=b.lower()
+                    if keyword[k]==b[k]:
+                        c+=1
+                    if c==l:
+                        if len(f)==0:
+                            f.append(i)
+                        if len(f)!=0 :
+                            for z in range(len(f)):
+                                if f[z]==i:
+                                    break
+                                else:
+                                    f.append(i)
 
+    return f
+
+
+def multi_word_search(doc_list, keywords):
+    keyword_to_indices = {}
+    for keyword in keywords:
+        keyword_to_indices[keyword] = word_search(doc_list, keyword)
+    return keyword_to_indices
+
+def Converter(Disease_prediction1):
+    Model_tmp = []
+    b = Disease_prediction1
+    for j in range (len(b)):
+        if b[j].isdigit():
+            
+            if b[j+1].isdigit():
+                Model_tmp.append(b[j]+b[j+1])
+
+            else:
+                if b[j-1].isdigit():
+                    continue
+                Model_tmp.append(b[j])
+    return Model_tmp
+
+config = { Add your FireBase Config here and thats all
+                                }
 
 Builder.load_string("""
 <StartPage>:
@@ -262,8 +318,7 @@ class Verification1(GridLayout):
     def submit_button(self , instance):
         EMAIL = self.login.text
         PASSWORD = self.password.text
-        config = {   set up your firebase account and add its config
-                                }
+
         firebase = pyrebase.initialize_app(config)
         auth = firebase.auth()
 
@@ -273,7 +328,7 @@ class Verification1(GridLayout):
             MDRDS.screen_manager.current = "HomeL"
 
         except:
-            MDRDS.screen_manager.current = "LE"
+            MDRDS.screen_manager.current = "FPE"
 
         
 class HomePageLogin(GridLayout):
@@ -357,8 +412,7 @@ class HomePageLogin(GridLayout):
         print(Email)
         PASSWORD = self.password.text
         print(PASSWORD)
-        config = {   set up your firebase account and add its config
-                                }
+
         firebase = pyrebase.initialize_app(config)
         auth = firebase.auth()
         try:
@@ -488,8 +542,7 @@ class HomePageSignUp(GridLayout):
         AGE = self.age.text
         GENDER = self.gender.text
         
-        config = {    set up your firebase account and add its config
-                                }
+
         firebase = pyrebase.initialize_app(config)
         auth = firebase.auth()
         db = firebase.database()
@@ -618,8 +671,7 @@ class HomePageFP(GridLayout):
     def fp_button2(self , instance):
         e = 0
         EMAIL = self.Fp_email.text
-        config = {   set up your firebase account and add its config
-                                }
+
         firebase = pyrebase.initialize_app(config)
         auth = firebase.auth()
         try:
@@ -661,23 +713,7 @@ class Analysis(GridLayout):
 
     def analysis_button(self , instance):
         try:
-            def Converter(Model_features):
-                Model_tmp = []
-                b = Model_features
-                for j in range (len(b)):
-                    if b[j].isdigit():
         
-                        if b[j+1].isdigit():
-                            Model_tmp.append(b[j]+b[j+1])
-
-                        else:
-                            if b[j-1].isdigit():
-                                continue
-                            Model_tmp.append(b[j])
-
-                return Model_tmp
-        
-
             with open('Diseases.txt') as input_file:
                 Diseases_list = [line.strip() for line in input_file]
             
@@ -762,21 +798,6 @@ class Prediction(GridLayout):
 
     def predict_button(self , instance):
       
-        def Converter(Disease_prediction1):
-            Model_tmp = []
-            b = Disease_prediction1
-            for j in range (len(b)):
-                if b[j].isdigit():
-        
-                    if b[j+1].isdigit():
-                        Model_tmp.append(b[j]+b[j+1])
-
-                    else:
-                        if b[j-1].isdigit():
-                            continue
-                        Model_tmp.append(b[j])
-
-            return Model_tmp
         
         Disease_prediction1 = list(self.Disease_prediction.text)
         Disease_prediction = Converter(Disease_prediction1)
@@ -915,62 +936,7 @@ class AQuestions(GridLayout):
 
     def yes_button(self, instance):
 
-        def word_search(Symptoms_list, keyword):
-    
-            keyword = keyword.lower()
-            l = len(keyword)
-            c = 0
-            f = []
-            v = 0
-            for i in range(len(Symptoms_list)):
-                a = Symptoms_list[i]
-                a = a.split()
-                for j in range(len(a)):
-                    c = 0
-                    v = 0
-                    for p in range(len(a[j])):
-                        b = a[j]
-                        if b[p] == "," or b[p] == ".":
-                            v = len(a[j])-1
-                    if l == len(a[j]) or l == v:
-                        for k in range(l):
-                            b = a[j]
-                            b = b.lower()
-                            if keyword[k] == b[k]:
-                                c+= 1
-                            if c == l:
-                                if len(f) == 0:
-                                    f.append(i)
-                                if len(f)!= 0 :
-                                    for z in range(len(f)):
-                                        if f[z] == i:
-                                            break
-                                        else:
-                                            f.append(i)
 
-            return f
-
-        def multi_word_search(Symptoms_list, keywords):
-            
-            keyword_to_indices = {}
-            for keyword in keywords:
-                keyword_to_indices[keyword] = word_search(Symptoms_list, keyword)
-            return keyword_to_indices
-
-        def Converter(Disease_prediction1):
-            Model_tmp = []
-            b = Disease_prediction1
-            for j in range (len(b)):
-                if b[j].isdigit():
-        
-                    if b[j+1].isdigit():
-                        Model_tmp.append(b[j]+b[j+1])
-
-                    else:
-                        if b[j-1].isdigit():
-                            continue
-                        Model_tmp.append(b[j])
-            return Model_tmp
 
         
         Disease_prediction = Converter(list(self.Disease_prediction.text))
@@ -1004,21 +970,8 @@ class AQuestions(GridLayout):
 
                 
 
-    def no_button(self , instancce):
-        def Converter(Disease_prediction1):
-            Model_tmp = []
-            b = Disease_prediction1
-            for j in range (len(b)):
-                if b[j].isdigit():
-        
-                    if b[j+1].isdigit():
-                        Model_tmp.append(b[j]+b[j+1])
+    def no_button(self , instance):
 
-                    else:
-                        if b[j-1].isdigit():
-                            continue
-                        Model_tmp.append(b[j])
-            return Model_tmp
         Disease_prediction = Converter(list(self.Disease_prediction.text))
         Model_features = Converter(list(self.Model_features.text))
         DPA1 = Converter(list(self.DPA1.text))
@@ -1079,63 +1032,6 @@ class AQuestions1(GridLayout):
 
     def yes_button(self, instance):
 
-        def word_search(Symptoms_list, keyword):
-    
-            keyword = keyword.lower()
-            l = len(keyword)
-            c = 0
-            f = []
-            v = 0
-            for i in range(len(Symptoms_list)):
-                a = Symptoms_list[i]
-                a = a.split()
-                for j in range(len(a)):
-                    c = 0
-                    v = 0
-                    for p in range(len(a[j])):
-                        b = a[j]
-                        if b[p] == "," or b[p] == ".":
-                            v = len(a[j])-1
-                    if l == len(a[j]) or l == v:
-                        for k in range(l):
-                            b = a[j]
-                            b = b.lower()
-                            if keyword[k] == b[k]:
-                                c+= 1
-                            if c == l:
-                                if len(f) == 0:
-                                    f.append(i)
-                                if len(f)!= 0 :
-                                    for z in range(len(f)):
-                                        if f[z] == i:
-                                            break
-                                        else:
-                                            f.append(i)
-
-            return f
-
-        def multi_word_search(Symptoms_list, keywords):
-            
-            keyword_to_indices = {}
-            for keyword in keywords:
-                keyword_to_indices[keyword] = word_search(Symptoms_list, keyword)
-            return keyword_to_indices
-
-        def Converter(Disease_prediction1):
-            Model_tmp = []
-            b = Disease_prediction1
-            for j in range (len(b)):
-                if b[j].isdigit():
-        
-                    if b[j+1].isdigit():
-                        Model_tmp.append(b[j]+b[j+1])
-
-                    else:
-                        if b[j-1].isdigit():
-                            continue
-                        Model_tmp.append(b[j])
-            return Model_tmp
-
         
         Disease_prediction = Converter(list(self.Disease_prediction.text))
         Model_features = Converter(list(self.Model_features.text))
@@ -1166,21 +1062,8 @@ class AQuestions1(GridLayout):
 
                 
 
-    def no_button(self , instancce):
-        def Converter(Disease_prediction1):
-            Model_tmp = []
-            b = Disease_prediction1
-            for j in range (len(b)):
-                if b[j].isdigit():
-        
-                    if b[j+1].isdigit():
-                        Model_tmp.append(b[j]+b[j+1])
+    def no_button(self , instance):
 
-                    else:
-                        if b[j-1].isdigit():
-                            continue
-                        Model_tmp.append(b[j])
-            return Model_tmp
         Disease_prediction = Converter(list(self.Disease_prediction.text))
         Model_features = Converter(list(self.Model_features.text))
         DPA1 = Converter(list(self.DPA1.text))
@@ -1240,64 +1123,6 @@ class AQuestions2(GridLayout):
         self.tmp1.text = tmp1[2]
 
     def yes_button(self, instance):
-
-        def word_search(Symptoms_list, keyword):
-    
-            keyword = keyword.lower()
-            l = len(keyword)
-            c = 0
-            f = []
-            v = 0
-            for i in range(len(Symptoms_list)):
-                a = Symptoms_list[i]
-                a = a.split()
-                for j in range(len(a)):
-                    c = 0
-                    v = 0
-                    for p in range(len(a[j])):
-                        b = a[j]
-                        if b[p] == "," or b[p] == ".":
-                            v = len(a[j])-1
-                    if l == len(a[j]) or l == v:
-                        for k in range(l):
-                            b = a[j]
-                            b = b.lower()
-                            if keyword[k] == b[k]:
-                                c+= 1
-                            if c == l:
-                                if len(f) == 0:
-                                    f.append(i)
-                                if len(f)!= 0 :
-                                    for z in range(len(f)):
-                                        if f[z] == i:
-                                            break
-                                        else:
-                                            f.append(i)
-
-            return f
-
-        def multi_word_search(Symptoms_list, keywords):
-            
-            keyword_to_indices = {}
-            for keyword in keywords:
-                keyword_to_indices[keyword] = word_search(Symptoms_list, keyword)
-            return keyword_to_indices
-
-        def Converter(Disease_prediction1):
-            Model_tmp = []
-            b = Disease_prediction1
-            for j in range (len(b)):
-                if b[j].isdigit():
-        
-                    if b[j+1].isdigit():
-                        Model_tmp.append(b[j]+b[j+1])
-
-                    else:
-                        if b[j-1].isdigit():
-                            continue
-                        Model_tmp.append(b[j])
-            return Model_tmp
-
         
         Disease_prediction = Converter(list(self.Disease_prediction.text))
         Model_features = Converter(list(self.Model_features.text))
@@ -1330,21 +1155,8 @@ class AQuestions2(GridLayout):
 
                 
 
-    def no_button(self , instancce):
-        def Converter(Disease_prediction1):
-            Model_tmp = []
-            b = Disease_prediction1
-            for j in range (len(b)):
-                if b[j].isdigit():
-        
-                    if b[j+1].isdigit():
-                        Model_tmp.append(b[j]+b[j+1])
+    def no_button(self , instance):
 
-                    else:
-                        if b[j-1].isdigit():
-                            continue
-                        Model_tmp.append(b[j])
-            return Model_tmp
         Disease_prediction = Converter(list(self.Disease_prediction.text))
         Model_features = Converter(list(self.Model_features.text))
         DPA1 = Converter(list(self.DPA1.text))
@@ -1404,64 +1216,6 @@ class AQuestions3(GridLayout):
         self.tmp1.text = tmp1[3]
 
     def yes_button(self, instance):
-
-        def word_search(Symptoms_list, keyword):
-    
-            keyword = keyword.lower()
-            l = len(keyword)
-            c = 0
-            f = []
-            v = 0
-            for i in range(len(Symptoms_list)):
-                a = Symptoms_list[i]
-                a = a.split()
-                for j in range(len(a)):
-                    c = 0
-                    v = 0
-                    for p in range(len(a[j])):
-                        b = a[j]
-                        if b[p] == "," or b[p] == ".":
-                            v = len(a[j])-1
-                    if l == len(a[j]) or l == v:
-                        for k in range(l):
-                            b = a[j]
-                            b = b.lower()
-                            if keyword[k] == b[k]:
-                                c+= 1
-                            if c == l:
-                                if len(f) == 0:
-                                    f.append(i)
-                                if len(f)!= 0 :
-                                    for z in range(len(f)):
-                                        if f[z] == i:
-                                            break
-                                        else:
-                                            f.append(i)
-
-            return f
-
-        def multi_word_search(Symptoms_list, keywords):
-            
-            keyword_to_indices = {}
-            for keyword in keywords:
-                keyword_to_indices[keyword] = word_search(Symptoms_list, keyword)
-            return keyword_to_indices
-
-        def Converter(Disease_prediction1):
-            Model_tmp = []
-            b = Disease_prediction1
-            for j in range (len(b)):
-                if b[j].isdigit():
-        
-                    if b[j+1].isdigit():
-                        Model_tmp.append(b[j]+b[j+1])
-
-                    else:
-                        if b[j-1].isdigit():
-                            continue
-                        Model_tmp.append(b[j])
-            return Model_tmp
-
         
         Disease_prediction = Converter(list(self.Disease_prediction.text))
         Model_features = Converter(list(self.Model_features.text))
@@ -1494,21 +1248,8 @@ class AQuestions3(GridLayout):
 
                 
 
-    def no_button(self , instancce):
-        def Converter(Disease_prediction1):
-            Model_tmp = []
-            b = Disease_prediction1
-            for j in range (len(b)):
-                if b[j].isdigit():
+    def no_button(self , instance):
         
-                    if b[j+1].isdigit():
-                        Model_tmp.append(b[j]+b[j+1])
-
-                    else:
-                        if b[j-1].isdigit():
-                            continue
-                        Model_tmp.append(b[j])
-            return Model_tmp
         Disease_prediction = Converter(list(self.Disease_prediction.text))
         Model_features = Converter(list(self.Model_features.text))
         DPA1 = Converter(list(self.DPA1.text))
@@ -1568,64 +1309,6 @@ class AQuestions4(GridLayout):
         self.tmp1.text = tmp1[4]
 
     def yes_button(self, instance):
-
-        def word_search(Symptoms_list, keyword):
-    
-            keyword = keyword.lower()
-            l = len(keyword)
-            c = 0
-            f = []
-            v = 0
-            for i in range(len(Symptoms_list)):
-                a = Symptoms_list[i]
-                a = a.split()
-                for j in range(len(a)):
-                    c = 0
-                    v = 0
-                    for p in range(len(a[j])):
-                        b = a[j]
-                        if b[p] == "," or b[p] == ".":
-                            v = len(a[j])-1
-                    if l == len(a[j]) or l == v:
-                        for k in range(l):
-                            b = a[j]
-                            b = b.lower()
-                            if keyword[k] == b[k]:
-                                c+= 1
-                            if c == l:
-                                if len(f) == 0:
-                                    f.append(i)
-                                if len(f)!= 0 :
-                                    for z in range(len(f)):
-                                        if f[z] == i:
-                                            break
-                                        else:
-                                            f.append(i)
-
-            return f
-
-        def multi_word_search(Symptoms_list, keywords):
-            
-            keyword_to_indices = {}
-            for keyword in keywords:
-                keyword_to_indices[keyword] = word_search(Symptoms_list, keyword)
-            return keyword_to_indices
-
-        def Converter(Disease_prediction1):
-            Model_tmp = []
-            b = Disease_prediction1
-            for j in range (len(b)):
-                if b[j].isdigit():
-        
-                    if b[j+1].isdigit():
-                        Model_tmp.append(b[j]+b[j+1])
-
-                    else:
-                        if b[j-1].isdigit():
-                            continue
-                        Model_tmp.append(b[j])
-            return Model_tmp
-
         
         Disease_prediction = Converter(list(self.Disease_prediction.text))
         Model_features = Converter(list(self.Model_features.text))
@@ -1658,21 +1341,8 @@ class AQuestions4(GridLayout):
 
                 
 
-    def no_button(self , instancce):
-        def Converter(Disease_prediction1):
-            Model_tmp = []
-            b = Disease_prediction1
-            for j in range (len(b)):
-                if b[j].isdigit():
+    def no_button(self , instance):
         
-                    if b[j+1].isdigit():
-                        Model_tmp.append(b[j]+b[j+1])
-
-                    else:
-                        if b[j-1].isdigit():
-                            continue
-                        Model_tmp.append(b[j])
-            return Model_tmp
         Disease_prediction = Converter(list(self.Disease_prediction.text))
         Model_features = Converter(list(self.Model_features.text))
         DPA1 = Converter(list(self.DPA1.text))
@@ -1733,64 +1403,6 @@ class AQuestions5(GridLayout):
 
     def yes_button(self, instance):
 
-        def word_search(Symptoms_list, keyword):
-    
-            keyword = keyword.lower()
-            l = len(keyword)
-            c = 0
-            f = []
-            v = 0
-            for i in range(len(Symptoms_list)):
-                a = Symptoms_list[i]
-                a = a.split()
-                for j in range(len(a)):
-                    c = 0
-                    v = 0
-                    for p in range(len(a[j])):
-                        b = a[j]
-                        if b[p] == "," or b[p] == ".":
-                            v = len(a[j])-1
-                    if l == len(a[j]) or l == v:
-                        for k in range(l):
-                            b = a[j]
-                            b = b.lower()
-                            if keyword[k] == b[k]:
-                                c+= 1
-                            if c == l:
-                                if len(f) == 0:
-                                    f.append(i)
-                                if len(f)!= 0 :
-                                    for z in range(len(f)):
-                                        if f[z] == i:
-                                            break
-                                        else:
-                                            f.append(i)
-
-            return f
-
-        def multi_word_search(Symptoms_list, keywords):
-            
-            keyword_to_indices = {}
-            for keyword in keywords:
-                keyword_to_indices[keyword] = word_search(Symptoms_list, keyword)
-            return keyword_to_indices
-
-        def Converter(Disease_prediction1):
-            Model_tmp = []
-            b = Disease_prediction1
-            for j in range (len(b)):
-                if b[j].isdigit():
-        
-                    if b[j+1].isdigit():
-                        Model_tmp.append(b[j]+b[j+1])
-
-                    else:
-                        if b[j-1].isdigit():
-                            continue
-                        Model_tmp.append(b[j])
-            return Model_tmp
-
-        
         Disease_prediction = Converter(list(self.Disease_prediction.text))
         Model_features = Converter(list(self.Model_features.text))
         DPA1 = Converter(list(self.DPA1.text))
@@ -1822,21 +1434,8 @@ class AQuestions5(GridLayout):
 
                 
 
-    def no_button(self , instancce):
-        def Converter(Disease_prediction1):
-            Model_tmp = []
-            b = Disease_prediction1
-            for j in range (len(b)):
-                if b[j].isdigit():
-        
-                    if b[j+1].isdigit():
-                        Model_tmp.append(b[j]+b[j+1])
-
-                    else:
-                        if b[j-1].isdigit():
-                            continue
-                        Model_tmp.append(b[j])
-            return Model_tmp
+    def no_button(self , instance):
+  
         Disease_prediction = Converter(list(self.Disease_prediction.text))
         Model_features = Converter(list(self.Model_features.text))
         DPA1 = Converter(list(self.DPA1.text))
@@ -1897,62 +1496,6 @@ class AQuestions6(GridLayout):
 
     def yes_button(self, instance):
 
-        def word_search(Symptoms_list, keyword):
-    
-            keyword = keyword.lower()
-            l = len(keyword)
-            c = 0
-            f = []
-            v = 0
-            for i in range(len(Symptoms_list)):
-                a = Symptoms_list[i]
-                a = a.split()
-                for j in range(len(a)):
-                    c = 0
-                    v = 0
-                    for p in range(len(a[j])):
-                        b = a[j]
-                        if b[p] == "," or b[p] == ".":
-                            v = len(a[j])-1
-                    if l == len(a[j]) or l == v:
-                        for k in range(l):
-                            b = a[j]
-                            b = b.lower()
-                            if keyword[k] == b[k]:
-                                c+= 1
-                            if c == l:
-                                if len(f) == 0:
-                                    f.append(i)
-                                if len(f)!= 0 :
-                                    for z in range(len(f)):
-                                        if f[z] == i:
-                                            break
-                                        else:
-                                            f.append(i)
-
-            return f
-
-        def multi_word_search(Symptoms_list, keywords):
-            
-            keyword_to_indices = {}
-            for keyword in keywords:
-                keyword_to_indices[keyword] = word_search(Symptoms_list, keyword)
-            return keyword_to_indices
-
-        def Converter(Disease_prediction1):
-            Model_tmp = []
-            b = Disease_prediction1
-            for j in range (len(b)):
-                if b[j].isdigit():
-        
-                    if b[j+1].isdigit():
-                        Model_tmp.append(b[j]+b[j+1])
-
-                    else:
-                        if b[j-1].isdigit():
-                            continue
-                        Model_tmp.append(b[j])
-            return Model_tmp
 
         
         Disease_prediction = Converter(list(self.Disease_prediction.text))
@@ -1986,21 +1529,8 @@ class AQuestions6(GridLayout):
 
                 
 
-    def no_button(self , instancce):
-        def Converter(Disease_prediction1):
-            Model_tmp = []
-            b = Disease_prediction1
-            for j in range (len(b)):
-                if b[j].isdigit():
-        
-                    if b[j+1].isdigit():
-                        Model_tmp.append(b[j]+b[j+1])
-
-                    else:
-                        if b[j-1].isdigit():
-                            continue
-                        Model_tmp.append(b[j])
-            return Model_tmp
+    def no_button(self , instance):
+       
         Disease_prediction = Converter(list(self.Disease_prediction.text))
         Model_features = Converter(list(self.Model_features.text))
         DPA1 = Converter(list(self.DPA1.text))
@@ -2060,64 +1590,6 @@ class AQuestions7(GridLayout):
         self.tmp1.text = tmp1[7]
 
     def yes_button(self, instance):
-
-        def word_search(Symptoms_list, keyword):
-    
-            keyword = keyword.lower()
-            l = len(keyword)
-            c = 0
-            f = []
-            v = 0
-            for i in range(len(Symptoms_list)):
-                a = Symptoms_list[i]
-                a = a.split()
-                for j in range(len(a)):
-                    c = 0
-                    v = 0
-                    for p in range(len(a[j])):
-                        b = a[j]
-                        if b[p] == "," or b[p] == ".":
-                            v = len(a[j])-1
-                    if l == len(a[j]) or l == v:
-                        for k in range(l):
-                            b = a[j]
-                            b = b.lower()
-                            if keyword[k] == b[k]:
-                                c+= 1
-                            if c == l:
-                                if len(f) == 0:
-                                    f.append(i)
-                                if len(f)!= 0 :
-                                    for z in range(len(f)):
-                                        if f[z] == i:
-                                            break
-                                        else:
-                                            f.append(i)
-
-            return f
-
-        def multi_word_search(Symptoms_list, keywords):
-            
-            keyword_to_indices = {}
-            for keyword in keywords:
-                keyword_to_indices[keyword] = word_search(Symptoms_list, keyword)
-            return keyword_to_indices
-
-        def Converter(Disease_prediction1):
-            Model_tmp = []
-            b = Disease_prediction1
-            for j in range (len(b)):
-                if b[j].isdigit():
-        
-                    if b[j+1].isdigit():
-                        Model_tmp.append(b[j]+b[j+1])
-
-                    else:
-                        if b[j-1].isdigit():
-                            continue
-                        Model_tmp.append(b[j])
-            return Model_tmp
-
         
         Disease_prediction = Converter(list(self.Disease_prediction.text))
         Model_features = Converter(list(self.Model_features.text))
@@ -2150,21 +1622,8 @@ class AQuestions7(GridLayout):
 
                 
 
-    def no_button(self , instancce):
-        def Converter(Disease_prediction1):
-            Model_tmp = []
-            b = Disease_prediction1
-            for j in range (len(b)):
-                if b[j].isdigit():
+    def no_button(self , instance):
         
-                    if b[j+1].isdigit():
-                        Model_tmp.append(b[j]+b[j+1])
-
-                    else:
-                        if b[j-1].isdigit():
-                            continue
-                        Model_tmp.append(b[j])
-            return Model_tmp
         Disease_prediction = Converter(list(self.Disease_prediction.text))
         Model_features = Converter(list(self.Model_features.text))
         DPA1 = Converter(list(self.DPA1.text))
@@ -2224,64 +1683,6 @@ class AQuestions8(GridLayout):
         self.tmp1.text = tmp1[8]
 
     def yes_button(self, instance):
-
-        def word_search(Symptoms_list, keyword):
-    
-            keyword = keyword.lower()
-            l = len(keyword)
-            c = 0
-            f = []
-            v = 0
-            for i in range(len(Symptoms_list)):
-                a = Symptoms_list[i]
-                a = a.split()
-                for j in range(len(a)):
-                    c = 0
-                    v = 0
-                    for p in range(len(a[j])):
-                        b = a[j]
-                        if b[p] == "," or b[p] == ".":
-                            v = len(a[j])-1
-                    if l == len(a[j]) or l == v:
-                        for k in range(l):
-                            b = a[j]
-                            b = b.lower()
-                            if keyword[k] == b[k]:
-                                c+= 1
-                            if c == l:
-                                if len(f) == 0:
-                                    f.append(i)
-                                if len(f)!= 0 :
-                                    for z in range(len(f)):
-                                        if f[z] == i:
-                                            break
-                                        else:
-                                            f.append(i)
-
-            return f
-
-        def multi_word_search(Symptoms_list, keywords):
-            
-            keyword_to_indices = {}
-            for keyword in keywords:
-                keyword_to_indices[keyword] = word_search(Symptoms_list, keyword)
-            return keyword_to_indices
-
-        def Converter(Disease_prediction1):
-            Model_tmp = []
-            b = Disease_prediction1
-            for j in range (len(b)):
-                if b[j].isdigit():
-        
-                    if b[j+1].isdigit():
-                        Model_tmp.append(b[j]+b[j+1])
-
-                    else:
-                        if b[j-1].isdigit():
-                            continue
-                        Model_tmp.append(b[j])
-            return Model_tmp
-
         
         Disease_prediction = Converter(list(self.Disease_prediction.text))
         Model_features = Converter(list(self.Model_features.text))
@@ -2314,21 +1715,8 @@ class AQuestions8(GridLayout):
 
                 
 
-    def no_button(self , instancce):
-        def Converter(Disease_prediction1):
-            Model_tmp = []
-            b = Disease_prediction1
-            for j in range (len(b)):
-                if b[j].isdigit():
-        
-                    if b[j+1].isdigit():
-                        Model_tmp.append(b[j]+b[j+1])
+    def no_button(self , instance):
 
-                    else:
-                        if b[j-1].isdigit():
-                            continue
-                        Model_tmp.append(b[j])
-            return Model_tmp
         Disease_prediction = Converter(list(self.Disease_prediction.text))
         Model_features = Converter(list(self.Model_features.text))
         DPA1 = Converter(list(self.DPA1.text))
@@ -2388,64 +1776,6 @@ class AQuestions9(GridLayout):
         self.tmp1.text = tmp1[9]
 
     def yes_button(self, instance):
-
-        def word_search(Symptoms_list, keyword):
-    
-            keyword = keyword.lower()
-            l = len(keyword)
-            c = 0
-            f = []
-            v = 0
-            for i in range(len(Symptoms_list)):
-                a = Symptoms_list[i]
-                a = a.split()
-                for j in range(len(a)):
-                    c = 0
-                    v = 0
-                    for p in range(len(a[j])):
-                        b = a[j]
-                        if b[p] == "," or b[p] == ".":
-                            v = len(a[j])-1
-                    if l == len(a[j]) or l == v:
-                        for k in range(l):
-                            b = a[j]
-                            b = b.lower()
-                            if keyword[k] == b[k]:
-                                c+= 1
-                            if c == l:
-                                if len(f) == 0:
-                                    f.append(i)
-                                if len(f)!= 0 :
-                                    for z in range(len(f)):
-                                        if f[z] == i:
-                                            break
-                                        else:
-                                            f.append(i)
-
-            return f
-
-        def multi_word_search(Symptoms_list, keywords):
-            
-            keyword_to_indices = {}
-            for keyword in keywords:
-                keyword_to_indices[keyword] = word_search(Symptoms_list, keyword)
-            return keyword_to_indices
-
-        def Converter(Disease_prediction1):
-            Model_tmp = []
-            b = Disease_prediction1
-            for j in range (len(b)):
-                if b[j].isdigit():
-        
-                    if b[j+1].isdigit():
-                        Model_tmp.append(b[j]+b[j+1])
-
-                    else:
-                        if b[j-1].isdigit():
-                            continue
-                        Model_tmp.append(b[j])
-            return Model_tmp
-
         
         Disease_prediction = Converter(list(self.Disease_prediction.text))
         Model_features = Converter(list(self.Model_features.text))
@@ -2478,21 +1808,8 @@ class AQuestions9(GridLayout):
 
                 
 
-    def no_button(self , instancce):
-        def Converter(Disease_prediction1):
-            Model_tmp = []
-            b = Disease_prediction1
-            for j in range (len(b)):
-                if b[j].isdigit():
-        
-                    if b[j+1].isdigit():
-                        Model_tmp.append(b[j]+b[j+1])
+    def no_button(self , instance):
 
-                    else:
-                        if b[j-1].isdigit():
-                            continue
-                        Model_tmp.append(b[j])
-            return Model_tmp
         Disease_prediction = Converter(list(self.Disease_prediction.text))
         Model_features = Converter(list(self.Model_features.text))
         DPA1 = Converter(list(self.DPA1.text))
@@ -2553,65 +1870,7 @@ class AQuestions10(GridLayout):
         self.tmp1.text = tmp1[10]
 
     def yes_button(self, instance):
-
-        def word_search(Symptoms_list, keyword):
-    
-            keyword = keyword.lower()
-            l = len(keyword)
-            c = 0
-            f = []
-            v = 0
-            for i in range(len(Symptoms_list)):
-                a = Symptoms_list[i]
-                a = a.split()
-                for j in range(len(a)):
-                    c = 0
-                    v = 0
-                    for p in range(len(a[j])):
-                        b = a[j]
-                        if b[p] == "," or b[p] == ".":
-                            v = len(a[j])-1
-                    if l == len(a[j]) or l == v:
-                        for k in range(l):
-                            b = a[j]
-                            b = b.lower()
-                            if keyword[k] == b[k]:
-                                c+= 1
-                            if c == l:
-                                if len(f) == 0:
-                                    f.append(i)
-                                if len(f)!= 0 :
-                                    for z in range(len(f)):
-                                        if f[z] == i:
-                                            break
-                                        else:
-                                            f.append(i)
-
-            return f
-
-        def multi_word_search(Symptoms_list, keywords):
-            
-            keyword_to_indices = {}
-            for keyword in keywords:
-                keyword_to_indices[keyword] = word_search(Symptoms_list, keyword)
-            return keyword_to_indices
-
-        def Converter(Disease_prediction1):
-            Model_tmp = []
-            b = Disease_prediction1
-            for j in range (len(b)):
-                if b[j].isdigit():
-        
-                    if b[j+1].isdigit():
-                        Model_tmp.append(b[j]+b[j+1])
-
-                    else:
-                        if b[j-1].isdigit():
-                            continue
-                        Model_tmp.append(b[j])
-            return Model_tmp
-
-        
+       
         Disease_prediction = Converter(list(self.Disease_prediction.text))
         Model_features = Converter(list(self.Model_features.text))
         DPA1 = Converter(list(self.DPA1.text))
@@ -2643,21 +1902,8 @@ class AQuestions10(GridLayout):
 
                 
 
-    def no_button(self , instancce):
-        def Converter(Disease_prediction1):
-            Model_tmp = []
-            b = Disease_prediction1
-            for j in range (len(b)):
-                if b[j].isdigit():
-        
-                    if b[j+1].isdigit():
-                        Model_tmp.append(b[j]+b[j+1])
+    def no_button(self , instance):
 
-                    else:
-                        if b[j-1].isdigit():
-                            continue
-                        Model_tmp.append(b[j])
-            return Model_tmp
         Disease_prediction = Converter(list(self.Disease_prediction.text))
         Model_features = Converter(list(self.Model_features.text))
         DPA1 = Converter(list(self.DPA1.text))
@@ -2717,64 +1963,6 @@ class AQuestions11(GridLayout):
         self.tmp1.text = tmp1[11]
 
     def yes_button(self, instance):
-
-        def word_search(Symptoms_list, keyword):
-    
-            keyword = keyword.lower()
-            l = len(keyword)
-            c = 0
-            f = []
-            v = 0
-            for i in range(len(Symptoms_list)):
-                a = Symptoms_list[i]
-                a = a.split()
-                for j in range(len(a)):
-                    c = 0
-                    v = 0
-                    for p in range(len(a[j])):
-                        b = a[j]
-                        if b[p] == "," or b[p] == ".":
-                            v = len(a[j])-1
-                    if l == len(a[j]) or l == v:
-                        for k in range(l):
-                            b = a[j]
-                            b = b.lower()
-                            if keyword[k] == b[k]:
-                                c+= 1
-                            if c == l:
-                                if len(f) == 0:
-                                    f.append(i)
-                                if len(f)!= 0 :
-                                    for z in range(len(f)):
-                                        if f[z] == i:
-                                            break
-                                        else:
-                                            f.append(i)
-
-            return f
-
-        def multi_word_search(Symptoms_list, keywords):
-            
-            keyword_to_indices = {}
-            for keyword in keywords:
-                keyword_to_indices[keyword] = word_search(Symptoms_list, keyword)
-            return keyword_to_indices
-
-        def Converter(Disease_prediction1):
-            Model_tmp = []
-            b = Disease_prediction1
-            for j in range (len(b)):
-                if b[j].isdigit():
-        
-                    if b[j+1].isdigit():
-                        Model_tmp.append(b[j]+b[j+1])
-
-                    else:
-                        if b[j-1].isdigit():
-                            continue
-                        Model_tmp.append(b[j])
-            return Model_tmp
-
         
         Disease_prediction = Converter(list(self.Disease_prediction.text))
         Model_features = Converter(list(self.Model_features.text))
@@ -2807,21 +1995,8 @@ class AQuestions11(GridLayout):
 
                 
 
-    def no_button(self , instancce):
-        def Converter(Disease_prediction1):
-            Model_tmp = []
-            b = Disease_prediction1
-            for j in range (len(b)):
-                if b[j].isdigit():
+    def no_button(self , instance):
         
-                    if b[j+1].isdigit():
-                        Model_tmp.append(b[j]+b[j+1])
-
-                    else:
-                        if b[j-1].isdigit():
-                            continue
-                        Model_tmp.append(b[j])
-            return Model_tmp
         Disease_prediction = Converter(list(self.Disease_prediction.text))
         Model_features = Converter(list(self.Model_features.text))
         DPA1 = Converter(list(self.DPA1.text))
@@ -2881,64 +2056,6 @@ class AQuestions12(GridLayout):
         self.tmp1.text = tmp1[12]
 
     def yes_button(self, instance):
-
-        def word_search(Symptoms_list, keyword):
-    
-            keyword = keyword.lower()
-            l = len(keyword)
-            c = 0
-            f = []
-            v = 0
-            for i in range(len(Symptoms_list)):
-                a = Symptoms_list[i]
-                a = a.split()
-                for j in range(len(a)):
-                    c = 0
-                    v = 0
-                    for p in range(len(a[j])):
-                        b = a[j]
-                        if b[p] == "," or b[p] == ".":
-                            v = len(a[j])-1
-                    if l == len(a[j]) or l == v:
-                        for k in range(l):
-                            b = a[j]
-                            b = b.lower()
-                            if keyword[k] == b[k]:
-                                c+= 1
-                            if c == l:
-                                if len(f) == 0:
-                                    f.append(i)
-                                if len(f)!= 0 :
-                                    for z in range(len(f)):
-                                        if f[z] == i:
-                                            break
-                                        else:
-                                            f.append(i)
-
-            return f
-
-        def multi_word_search(Symptoms_list, keywords):
-            
-            keyword_to_indices = {}
-            for keyword in keywords:
-                keyword_to_indices[keyword] = word_search(Symptoms_list, keyword)
-            return keyword_to_indices
-
-        def Converter(Disease_prediction1):
-            Model_tmp = []
-            b = Disease_prediction1
-            for j in range (len(b)):
-                if b[j].isdigit():
-        
-                    if b[j+1].isdigit():
-                        Model_tmp.append(b[j]+b[j+1])
-
-                    else:
-                        if b[j-1].isdigit():
-                            continue
-                        Model_tmp.append(b[j])
-            return Model_tmp
-
         
         Disease_prediction = Converter(list(self.Disease_prediction.text))
         Model_features = Converter(list(self.Model_features.text))
@@ -2971,21 +2088,8 @@ class AQuestions12(GridLayout):
 
                 
 
-    def no_button(self , instancce):
-        def Converter(Disease_prediction1):
-            Model_tmp = []
-            b = Disease_prediction1
-            for j in range (len(b)):
-                if b[j].isdigit():
-        
-                    if b[j+1].isdigit():
-                        Model_tmp.append(b[j]+b[j+1])
+    def no_button(self , instance):
 
-                    else:
-                        if b[j-1].isdigit():
-                            continue
-                        Model_tmp.append(b[j])
-            return Model_tmp
         Disease_prediction = Converter(list(self.Disease_prediction.text))
         Model_features = Converter(list(self.Model_features.text))
         DPA1 = Converter(list(self.DPA1.text))
@@ -3046,63 +2150,6 @@ class AQuestions13(GridLayout):
 
     def yes_button(self, instance):
 
-        def word_search(Symptoms_list, keyword):
-    
-            keyword = keyword.lower()
-            l = len(keyword)
-            c = 0
-            f = []
-            v = 0
-            for i in range(len(Symptoms_list)):
-                a = Symptoms_list[i]
-                a = a.split()
-                for j in range(len(a)):
-                    c = 0
-                    v = 0
-                    for p in range(len(a[j])):
-                        b = a[j]
-                        if b[p] == "," or b[p] == ".":
-                            v = len(a[j])-1
-                    if l == len(a[j]) or l == v:
-                        for k in range(l):
-                            b = a[j]
-                            b = b.lower()
-                            if keyword[k] == b[k]:
-                                c+= 1
-                            if c == l:
-                                if len(f) == 0:
-                                    f.append(i)
-                                if len(f)!= 0 :
-                                    for z in range(len(f)):
-                                        if f[z] == i:
-                                            break
-                                        else:
-                                            f.append(i)
-
-            return f
-
-        def multi_word_search(Symptoms_list, keywords):
-            
-            keyword_to_indices = {}
-            for keyword in keywords:
-                keyword_to_indices[keyword] = word_search(Symptoms_list, keyword)
-            return keyword_to_indices
-
-        def Converter(Disease_prediction1):
-            Model_tmp = []
-            b = Disease_prediction1
-            for j in range (len(b)):
-                if b[j].isdigit():
-        
-                    if b[j+1].isdigit():
-                        Model_tmp.append(b[j]+b[j+1])
-
-                    else:
-                        if b[j-1].isdigit():
-                            continue
-                        Model_tmp.append(b[j])
-            return Model_tmp
-
         
         Disease_prediction = Converter(list(self.Disease_prediction.text))
         Model_features = Converter(list(self.Model_features.text))
@@ -3135,21 +2182,8 @@ class AQuestions13(GridLayout):
 
                 
 
-    def no_button(self , instancce):
-        def Converter(Disease_prediction1):
-            Model_tmp = []
-            b = Disease_prediction1
-            for j in range (len(b)):
-                if b[j].isdigit():
-        
-                    if b[j+1].isdigit():
-                        Model_tmp.append(b[j]+b[j+1])
+    def no_button(self , instance):
 
-                    else:
-                        if b[j-1].isdigit():
-                            continue
-                        Model_tmp.append(b[j])
-            return Model_tmp
         Disease_prediction = Converter(list(self.Disease_prediction.text))
         Model_features = Converter(list(self.Model_features.text))
         DPA1 = Converter(list(self.DPA1.text))
@@ -3210,64 +2244,6 @@ class AQuestions14(GridLayout):
 
     def yes_button(self, instance):
 
-        def word_search(Symptoms_list, keyword):
-    
-            keyword = keyword.lower()
-            l = len(keyword)
-            c = 0
-            f = []
-            v = 0
-            for i in range(len(Symptoms_list)):
-                a = Symptoms_list[i]
-                a = a.split()
-                for j in range(len(a)):
-                    c = 0
-                    v = 0
-                    for p in range(len(a[j])):
-                        b = a[j]
-                        if b[p] == "," or b[p] == ".":
-                            v = len(a[j])-1
-                    if l == len(a[j]) or l == v:
-                        for k in range(l):
-                            b = a[j]
-                            b = b.lower()
-                            if keyword[k] == b[k]:
-                                c+= 1
-                            if c == l:
-                                if len(f) == 0:
-                                    f.append(i)
-                                if len(f)!= 0 :
-                                    for z in range(len(f)):
-                                        if f[z] == i:
-                                            break
-                                        else:
-                                            f.append(i)
-
-            return f
-
-        def multi_word_search(Symptoms_list, keywords):
-            
-            keyword_to_indices = {}
-            for keyword in keywords:
-                keyword_to_indices[keyword] = word_search(Symptoms_list, keyword)
-            return keyword_to_indices
-
-        def Converter(Disease_prediction1):
-            Model_tmp = []
-            b = Disease_prediction1
-            for j in range (len(b)):
-                if b[j].isdigit():
-        
-                    if b[j+1].isdigit():
-                        Model_tmp.append(b[j]+b[j+1])
-
-                    else:
-                        if b[j-1].isdigit():
-                            continue
-                        Model_tmp.append(b[j])
-            return Model_tmp
-
-        
         Disease_prediction = Converter(list(self.Disease_prediction.text))
         Model_features = Converter(list(self.Model_features.text))
         DPA1 = Converter(list(self.DPA1.text))
@@ -3299,21 +2275,8 @@ class AQuestions14(GridLayout):
 
                 
 
-    def no_button(self , instancce):
-        def Converter(Disease_prediction1):
-            Model_tmp = []
-            b = Disease_prediction1
-            for j in range (len(b)):
-                if b[j].isdigit():
-        
-                    if b[j+1].isdigit():
-                        Model_tmp.append(b[j]+b[j+1])
+    def no_button(self , instance):
 
-                    else:
-                        if b[j-1].isdigit():
-                            continue
-                        Model_tmp.append(b[j])
-            return Model_tmp
         Disease_prediction = Converter(list(self.Disease_prediction.text))
         Model_features = Converter(list(self.Model_features.text))
         DPA1 = Converter(list(self.DPA1.text))
@@ -3374,64 +2337,6 @@ class AQuestions15(GridLayout):
 
     def yes_button(self, instance):
 
-        def word_search(Symptoms_list, keyword):
-    
-            keyword = keyword.lower()
-            l = len(keyword)
-            c = 0
-            f = []
-            v = 0
-            for i in range(len(Symptoms_list)):
-                a = Symptoms_list[i]
-                a = a.split()
-                for j in range(len(a)):
-                    c = 0
-                    v = 0
-                    for p in range(len(a[j])):
-                        b = a[j]
-                        if b[p] == "," or b[p] == ".":
-                            v = len(a[j])-1
-                    if l == len(a[j]) or l == v:
-                        for k in range(l):
-                            b = a[j]
-                            b = b.lower()
-                            if keyword[k] == b[k]:
-                                c+= 1
-                            if c == l:
-                                if len(f) == 0:
-                                    f.append(i)
-                                if len(f)!= 0 :
-                                    for z in range(len(f)):
-                                        if f[z] == i:
-                                            break
-                                        else:
-                                            f.append(i)
-
-            return f
-
-        def multi_word_search(Symptoms_list, keywords):
-            
-            keyword_to_indices = {}
-            for keyword in keywords:
-                keyword_to_indices[keyword] = word_search(Symptoms_list, keyword)
-            return keyword_to_indices
-
-        def Converter(Disease_prediction1):
-            Model_tmp = []
-            b = Disease_prediction1
-            for j in range (len(b)):
-                if b[j].isdigit():
-        
-                    if b[j+1].isdigit():
-                        Model_tmp.append(b[j]+b[j+1])
-
-                    else:
-                        if b[j-1].isdigit():
-                            continue
-                        Model_tmp.append(b[j])
-            return Model_tmp
-
-        
         Disease_prediction = Converter(list(self.Disease_prediction.text))
         Model_features = Converter(list(self.Model_features.text))
         DPA1 = Converter(list(self.DPA1.text))
@@ -3463,21 +2368,8 @@ class AQuestions15(GridLayout):
 
                 
 
-    def no_button(self , instancce):
-        def Converter(Disease_prediction1):
-            Model_tmp = []
-            b = Disease_prediction1
-            for j in range (len(b)):
-                if b[j].isdigit():
+    def no_button(self , instance):
         
-                    if b[j+1].isdigit():
-                        Model_tmp.append(b[j]+b[j+1])
-
-                    else:
-                        if b[j-1].isdigit():
-                            continue
-                        Model_tmp.append(b[j])
-            return Model_tmp
         Disease_prediction = Converter(list(self.Disease_prediction.text))
         Model_features = Converter(list(self.Model_features.text))
         DPA1 = Converter(list(self.DPA1.text))
@@ -3538,64 +2430,6 @@ class AQuestions16(GridLayout):
 
     def yes_button(self, instance):
 
-        def word_search(Symptoms_list, keyword):
-    
-            keyword = keyword.lower()
-            l = len(keyword)
-            c = 0
-            f = []
-            v = 0
-            for i in range(len(Symptoms_list)):
-                a = Symptoms_list[i]
-                a = a.split()
-                for j in range(len(a)):
-                    c = 0
-                    v = 0
-                    for p in range(len(a[j])):
-                        b = a[j]
-                        if b[p] == "," or b[p] == ".":
-                            v = len(a[j])-1
-                    if l == len(a[j]) or l == v:
-                        for k in range(l):
-                            b = a[j]
-                            b = b.lower()
-                            if keyword[k] == b[k]:
-                                c+= 1
-                            if c == l:
-                                if len(f) == 0:
-                                    f.append(i)
-                                if len(f)!= 0 :
-                                    for z in range(len(f)):
-                                        if f[z] == i:
-                                            break
-                                        else:
-                                            f.append(i)
-
-            return f
-
-        def multi_word_search(Symptoms_list, keywords):
-            
-            keyword_to_indices = {}
-            for keyword in keywords:
-                keyword_to_indices[keyword] = word_search(Symptoms_list, keyword)
-            return keyword_to_indices
-
-        def Converter(Disease_prediction1):
-            Model_tmp = []
-            b = Disease_prediction1
-            for j in range (len(b)):
-                if b[j].isdigit():
-        
-                    if b[j+1].isdigit():
-                        Model_tmp.append(b[j]+b[j+1])
-
-                    else:
-                        if b[j-1].isdigit():
-                            continue
-                        Model_tmp.append(b[j])
-            return Model_tmp
-
-        
         Disease_prediction = Converter(list(self.Disease_prediction.text))
         Model_features = Converter(list(self.Model_features.text))
         DPA1 = Converter(list(self.DPA1.text))
@@ -3627,21 +2461,8 @@ class AQuestions16(GridLayout):
 
                 
 
-    def no_button(self , instancce):
-        def Converter(Disease_prediction1):
-            Model_tmp = []
-            b = Disease_prediction1
-            for j in range (len(b)):
-                if b[j].isdigit():
-        
-                    if b[j+1].isdigit():
-                        Model_tmp.append(b[j]+b[j+1])
+    def no_button(self , instance):
 
-                    else:
-                        if b[j-1].isdigit():
-                            continue
-                        Model_tmp.append(b[j])
-            return Model_tmp
         Disease_prediction = Converter(list(self.Disease_prediction.text))
         Model_features = Converter(list(self.Model_features.text))
         DPA1 = Converter(list(self.DPA1.text))
@@ -3702,64 +2523,6 @@ class AQuestions17(GridLayout):
 
     def yes_button(self, instance):
 
-        def word_search(Symptoms_list, keyword):
-    
-            keyword = keyword.lower()
-            l = len(keyword)
-            c = 0
-            f = []
-            v = 0
-            for i in range(len(Symptoms_list)):
-                a = Symptoms_list[i]
-                a = a.split()
-                for j in range(len(a)):
-                    c = 0
-                    v = 0
-                    for p in range(len(a[j])):
-                        b = a[j]
-                        if b[p] == "," or b[p] == ".":
-                            v = len(a[j])-1
-                    if l == len(a[j]) or l == v:
-                        for k in range(l):
-                            b = a[j]
-                            b = b.lower()
-                            if keyword[k] == b[k]:
-                                c+= 1
-                            if c == l:
-                                if len(f) == 0:
-                                    f.append(i)
-                                if len(f)!= 0 :
-                                    for z in range(len(f)):
-                                        if f[z] == i:
-                                            break
-                                        else:
-                                            f.append(i)
-
-            return f
-
-        def multi_word_search(Symptoms_list, keywords):
-            
-            keyword_to_indices = {}
-            for keyword in keywords:
-                keyword_to_indices[keyword] = word_search(Symptoms_list, keyword)
-            return keyword_to_indices
-
-        def Converter(Disease_prediction1):
-            Model_tmp = []
-            b = Disease_prediction1
-            for j in range (len(b)):
-                if b[j].isdigit():
-        
-                    if b[j+1].isdigit():
-                        Model_tmp.append(b[j]+b[j+1])
-
-                    else:
-                        if b[j-1].isdigit():
-                            continue
-                        Model_tmp.append(b[j])
-            return Model_tmp
-
-        
         Disease_prediction = Converter(list(self.Disease_prediction.text))
         Model_features = Converter(list(self.Model_features.text))
         DPA1 = Converter(list(self.DPA1.text))
@@ -3791,21 +2554,8 @@ class AQuestions17(GridLayout):
 
                 
 
-    def no_button(self , instancce):
-        def Converter(Disease_prediction1):
-            Model_tmp = []
-            b = Disease_prediction1
-            for j in range (len(b)):
-                if b[j].isdigit():
-        
-                    if b[j+1].isdigit():
-                        Model_tmp.append(b[j]+b[j+1])
+    def no_button(self , instance):
 
-                    else:
-                        if b[j-1].isdigit():
-                            continue
-                        Model_tmp.append(b[j])
-            return Model_tmp
         Disease_prediction = Converter(list(self.Disease_prediction.text))
         Model_features = Converter(list(self.Model_features.text))
         DPA1 = Converter(list(self.DPA1.text))
@@ -3866,64 +2616,6 @@ class AQuestions18(GridLayout):
 
     def yes_button(self, instance):
 
-        def word_search(Symptoms_list, keyword):
-    
-            keyword = keyword.lower()
-            l = len(keyword)
-            c = 0
-            f = []
-            v = 0
-            for i in range(len(Symptoms_list)):
-                a = Symptoms_list[i]
-                a = a.split()
-                for j in range(len(a)):
-                    c = 0
-                    v = 0
-                    for p in range(len(a[j])):
-                        b = a[j]
-                        if b[p] == "," or b[p] == ".":
-                            v = len(a[j])-1
-                    if l == len(a[j]) or l == v:
-                        for k in range(l):
-                            b = a[j]
-                            b = b.lower()
-                            if keyword[k] == b[k]:
-                                c+= 1
-                            if c == l:
-                                if len(f) == 0:
-                                    f.append(i)
-                                if len(f)!= 0 :
-                                    for z in range(len(f)):
-                                        if f[z] == i:
-                                            break
-                                        else:
-                                            f.append(i)
-
-            return f
-
-        def multi_word_search(Symptoms_list, keywords):
-            
-            keyword_to_indices = {}
-            for keyword in keywords:
-                keyword_to_indices[keyword] = word_search(Symptoms_list, keyword)
-            return keyword_to_indices
-
-        def Converter(Disease_prediction1):
-            Model_tmp = []
-            b = Disease_prediction1
-            for j in range (len(b)):
-                if b[j].isdigit():
-        
-                    if b[j+1].isdigit():
-                        Model_tmp.append(b[j]+b[j+1])
-
-                    else:
-                        if b[j-1].isdigit():
-                            continue
-                        Model_tmp.append(b[j])
-            return Model_tmp
-
-        
         Disease_prediction = Converter(list(self.Disease_prediction.text))
         Model_features = Converter(list(self.Model_features.text))
         DPA1 = Converter(list(self.DPA1.text))
@@ -3955,21 +2647,8 @@ class AQuestions18(GridLayout):
 
                 
 
-    def no_button(self , instancce):
-        def Converter(Disease_prediction1):
-            Model_tmp = []
-            b = Disease_prediction1
-            for j in range (len(b)):
-                if b[j].isdigit():
-        
-                    if b[j+1].isdigit():
-                        Model_tmp.append(b[j]+b[j+1])
+    def no_button(self , instance):
 
-                    else:
-                        if b[j-1].isdigit():
-                            continue
-                        Model_tmp.append(b[j])
-            return Model_tmp
         Disease_prediction = Converter(list(self.Disease_prediction.text))
         Model_features = Converter(list(self.Model_features.text))
         DPA1 = Converter(list(self.DPA1.text))
@@ -4031,64 +2710,6 @@ class AQuestions19(GridLayout):
 
     def yes_button(self, instance):
 
-        def word_search(Symptoms_list, keyword):
-    
-            keyword = keyword.lower()
-            l = len(keyword)
-            c = 0
-            f = []
-            v = 0
-            for i in range(len(Symptoms_list)):
-                a = Symptoms_list[i]
-                a = a.split()
-                for j in range(len(a)):
-                    c = 0
-                    v = 0
-                    for p in range(len(a[j])):
-                        b = a[j]
-                        if b[p] == "," or b[p] == ".":
-                            v = len(a[j])-1
-                    if l == len(a[j]) or l == v:
-                        for k in range(l):
-                            b = a[j]
-                            b = b.lower()
-                            if keyword[k] == b[k]:
-                                c+= 1
-                            if c == l:
-                                if len(f) == 0:
-                                    f.append(i)
-                                if len(f)!= 0 :
-                                    for z in range(len(f)):
-                                        if f[z] == i:
-                                            break
-                                        else:
-                                            f.append(i)
-
-            return f
-
-        def multi_word_search(Symptoms_list, keywords):
-            
-            keyword_to_indices = {}
-            for keyword in keywords:
-                keyword_to_indices[keyword] = word_search(Symptoms_list, keyword)
-            return keyword_to_indices
-
-        def Converter(Disease_prediction1):
-            Model_tmp = []
-            b = Disease_prediction1
-            for j in range (len(b)):
-                if b[j].isdigit():
-        
-                    if b[j+1].isdigit():
-                        Model_tmp.append(b[j]+b[j+1])
-
-                    else:
-                        if b[j-1].isdigit():
-                            continue
-                        Model_tmp.append(b[j])
-            return Model_tmp
-
-        
         Disease_prediction = Converter(list(self.Disease_prediction.text))
         Model_features = Converter(list(self.Model_features.text))
         DPA1 = Converter(list(self.DPA1.text))
@@ -4120,21 +2741,8 @@ class AQuestions19(GridLayout):
 
                 
 
-    def no_button(self , instancce):
-        def Converter(Disease_prediction1):
-            Model_tmp = []
-            b = Disease_prediction1
-            for j in range (len(b)):
-                if b[j].isdigit():
-        
-                    if b[j+1].isdigit():
-                        Model_tmp.append(b[j]+b[j+1])
+    def no_button(self , instance):
 
-                    else:
-                        if b[j-1].isdigit():
-                            continue
-                        Model_tmp.append(b[j])
-            return Model_tmp
         Disease_prediction = Converter(list(self.Disease_prediction.text))
         Model_features = Converter(list(self.Model_features.text))
         DPA1 = Converter(list(self.DPA1.text))
@@ -4195,64 +2803,6 @@ class AQuestions20(GridLayout):
 
     def yes_button(self, instance):
 
-        def word_search(Symptoms_list, keyword):
-    
-            keyword = keyword.lower()
-            l = len(keyword)
-            c = 0
-            f = []
-            v = 0
-            for i in range(len(Symptoms_list)):
-                a = Symptoms_list[i]
-                a = a.split()
-                for j in range(len(a)):
-                    c = 0
-                    v = 0
-                    for p in range(len(a[j])):
-                        b = a[j]
-                        if b[p] == "," or b[p] == ".":
-                            v = len(a[j])-1
-                    if l == len(a[j]) or l == v:
-                        for k in range(l):
-                            b = a[j]
-                            b = b.lower()
-                            if keyword[k] == b[k]:
-                                c+= 1
-                            if c == l:
-                                if len(f) == 0:
-                                    f.append(i)
-                                if len(f)!= 0 :
-                                    for z in range(len(f)):
-                                        if f[z] == i:
-                                            break
-                                        else:
-                                            f.append(i)
-
-            return f
-
-        def multi_word_search(Symptoms_list, keywords):
-            
-            keyword_to_indices = {}
-            for keyword in keywords:
-                keyword_to_indices[keyword] = word_search(Symptoms_list, keyword)
-            return keyword_to_indices
-
-        def Converter(Disease_prediction1):
-            Model_tmp = []
-            b = Disease_prediction1
-            for j in range (len(b)):
-                if b[j].isdigit():
-        
-                    if b[j+1].isdigit():
-                        Model_tmp.append(b[j]+b[j+1])
-
-                    else:
-                        if b[j-1].isdigit():
-                            continue
-                        Model_tmp.append(b[j])
-            return Model_tmp
-
-        
         Disease_prediction = Converter(list(self.Disease_prediction.text))
         Model_features = Converter(list(self.Model_features.text))
         DPA1 = Converter(list(self.DPA1.text))
@@ -4284,21 +2834,8 @@ class AQuestions20(GridLayout):
 
                 
 
-    def no_button(self , instancce):
-        def Converter(Disease_prediction1):
-            Model_tmp = []
-            b = Disease_prediction1
-            for j in range (len(b)):
-                if b[j].isdigit():
-        
-                    if b[j+1].isdigit():
-                        Model_tmp.append(b[j]+b[j+1])
+    def no_button(self , instance):
 
-                    else:
-                        if b[j-1].isdigit():
-                            continue
-                        Model_tmp.append(b[j])
-            return Model_tmp
         Disease_prediction = Converter(list(self.Disease_prediction.text))
         Model_features = Converter(list(self.Model_features.text))
         DPA1 = Converter(list(self.DPA1.text))
@@ -4359,64 +2896,6 @@ class AQuestions21(GridLayout):
 
     def yes_button(self, instance):
 
-        def word_search(Symptoms_list, keyword):
-    
-            keyword = keyword.lower()
-            l = len(keyword)
-            c = 0
-            f = []
-            v = 0
-            for i in range(len(Symptoms_list)):
-                a = Symptoms_list[i]
-                a = a.split()
-                for j in range(len(a)):
-                    c = 0
-                    v = 0
-                    for p in range(len(a[j])):
-                        b = a[j]
-                        if b[p] == "," or b[p] == ".":
-                            v = len(a[j])-1
-                    if l == len(a[j]) or l == v:
-                        for k in range(l):
-                            b = a[j]
-                            b = b.lower()
-                            if keyword[k] == b[k]:
-                                c+= 1
-                            if c == l:
-                                if len(f) == 0:
-                                    f.append(i)
-                                if len(f)!= 0 :
-                                    for z in range(len(f)):
-                                        if f[z] == i:
-                                            break
-                                        else:
-                                            f.append(i)
-
-            return f
-
-        def multi_word_search(Symptoms_list, keywords):
-            
-            keyword_to_indices = {}
-            for keyword in keywords:
-                keyword_to_indices[keyword] = word_search(Symptoms_list, keyword)
-            return keyword_to_indices
-
-        def Converter(Disease_prediction1):
-            Model_tmp = []
-            b = Disease_prediction1
-            for j in range (len(b)):
-                if b[j].isdigit():
-        
-                    if b[j+1].isdigit():
-                        Model_tmp.append(b[j]+b[j+1])
-
-                    else:
-                        if b[j-1].isdigit():
-                            continue
-                        Model_tmp.append(b[j])
-            return Model_tmp
-
-        
         Disease_prediction = Converter(list(self.Disease_prediction.text))
         Model_features = Converter(list(self.Model_features.text))
         DPA1 = Converter(list(self.DPA1.text))
@@ -4448,21 +2927,8 @@ class AQuestions21(GridLayout):
 
                 
 
-    def no_button(self , instancce):
-        def Converter(Disease_prediction1):
-            Model_tmp = []
-            b = Disease_prediction1
-            for j in range (len(b)):
-                if b[j].isdigit():
-        
-                    if b[j+1].isdigit():
-                        Model_tmp.append(b[j]+b[j+1])
+    def no_button(self , instance):
 
-                    else:
-                        if b[j-1].isdigit():
-                            continue
-                        Model_tmp.append(b[j])
-            return Model_tmp
         Disease_prediction = Converter(list(self.Disease_prediction.text))
         Model_features = Converter(list(self.Model_features.text))
         DPA1 = Converter(list(self.DPA1.text))
@@ -4523,64 +2989,6 @@ class AQuestions22(GridLayout):
 
     def yes_button(self, instance):
 
-        def word_search(Symptoms_list, keyword):
-    
-            keyword = keyword.lower()
-            l = len(keyword)
-            c = 0
-            f = []
-            v = 0
-            for i in range(len(Symptoms_list)):
-                a = Symptoms_list[i]
-                a = a.split()
-                for j in range(len(a)):
-                    c = 0
-                    v = 0
-                    for p in range(len(a[j])):
-                        b = a[j]
-                        if b[p] == "," or b[p] == ".":
-                            v = len(a[j])-1
-                    if l == len(a[j]) or l == v:
-                        for k in range(l):
-                            b = a[j]
-                            b = b.lower()
-                            if keyword[k] == b[k]:
-                                c+= 1
-                            if c == l:
-                                if len(f) == 0:
-                                    f.append(i)
-                                if len(f)!= 0 :
-                                    for z in range(len(f)):
-                                        if f[z] == i:
-                                            break
-                                        else:
-                                            f.append(i)
-
-            return f
-
-        def multi_word_search(Symptoms_list, keywords):
-            
-            keyword_to_indices = {}
-            for keyword in keywords:
-                keyword_to_indices[keyword] = word_search(Symptoms_list, keyword)
-            return keyword_to_indices
-
-        def Converter(Disease_prediction1):
-            Model_tmp = []
-            b = Disease_prediction1
-            for j in range (len(b)):
-                if b[j].isdigit():
-        
-                    if b[j+1].isdigit():
-                        Model_tmp.append(b[j]+b[j+1])
-
-                    else:
-                        if b[j-1].isdigit():
-                            continue
-                        Model_tmp.append(b[j])
-            return Model_tmp
-
-        
         Disease_prediction = Converter(list(self.Disease_prediction.text))
         Model_features = Converter(list(self.Model_features.text))
         DPA1 = Converter(list(self.DPA1.text))
@@ -4612,21 +3020,8 @@ class AQuestions22(GridLayout):
 
                 
 
-    def no_button(self , instancce):
-        def Converter(Disease_prediction1):
-            Model_tmp = []
-            b = Disease_prediction1
-            for j in range (len(b)):
-                if b[j].isdigit():
-        
-                    if b[j+1].isdigit():
-                        Model_tmp.append(b[j]+b[j+1])
+    def no_button(self , instance):
 
-                    else:
-                        if b[j-1].isdigit():
-                            continue
-                        Model_tmp.append(b[j])
-            return Model_tmp
         Disease_prediction = Converter(list(self.Disease_prediction.text))
         Model_features = Converter(list(self.Model_features.text))
         DPA1 = Converter(list(self.DPA1.text))
@@ -4687,64 +3082,6 @@ class AQuestions23(GridLayout):
 
     def yes_button(self, instance):
 
-        def word_search(Symptoms_list, keyword):
-    
-            keyword = keyword.lower()
-            l = len(keyword)
-            c = 0
-            f = []
-            v = 0
-            for i in range(len(Symptoms_list)):
-                a = Symptoms_list[i]
-                a = a.split()
-                for j in range(len(a)):
-                    c = 0
-                    v = 0
-                    for p in range(len(a[j])):
-                        b = a[j]
-                        if b[p] == "," or b[p] == ".":
-                            v = len(a[j])-1
-                    if l == len(a[j]) or l == v:
-                        for k in range(l):
-                            b = a[j]
-                            b = b.lower()
-                            if keyword[k] == b[k]:
-                                c+= 1
-                            if c == l:
-                                if len(f) == 0:
-                                    f.append(i)
-                                if len(f)!= 0 :
-                                    for z in range(len(f)):
-                                        if f[z] == i:
-                                            break
-                                        else:
-                                            f.append(i)
-
-            return f
-
-        def multi_word_search(Symptoms_list, keywords):
-            
-            keyword_to_indices = {}
-            for keyword in keywords:
-                keyword_to_indices[keyword] = word_search(Symptoms_list, keyword)
-            return keyword_to_indices
-
-        def Converter(Disease_prediction1):
-            Model_tmp = []
-            b = Disease_prediction1
-            for j in range (len(b)):
-                if b[j].isdigit():
-        
-                    if b[j+1].isdigit():
-                        Model_tmp.append(b[j]+b[j+1])
-
-                    else:
-                        if b[j-1].isdigit():
-                            continue
-                        Model_tmp.append(b[j])
-            return Model_tmp
-
-        
         Disease_prediction = Converter(list(self.Disease_prediction.text))
         Model_features = Converter(list(self.Model_features.text))
         DPA1 = Converter(list(self.DPA1.text))
@@ -4776,21 +3113,8 @@ class AQuestions23(GridLayout):
 
                 
 
-    def no_button(self , instancce):
-        def Converter(Disease_prediction1):
-            Model_tmp = []
-            b = Disease_prediction1
-            for j in range (len(b)):
-                if b[j].isdigit():
-        
-                    if b[j+1].isdigit():
-                        Model_tmp.append(b[j]+b[j+1])
+    def no_button(self , instance):
 
-                    else:
-                        if b[j-1].isdigit():
-                            continue
-                        Model_tmp.append(b[j])
-            return Model_tmp
         Disease_prediction = Converter(list(self.Disease_prediction.text))
         Model_features = Converter(list(self.Model_features.text))
         DPA1 = Converter(list(self.DPA1.text))
@@ -4856,64 +3180,6 @@ class AQuestions24(GridLayout):
 
     def yes_button(self, instance):
 
-        def word_search(Symptoms_list, keyword):
-    
-            keyword = keyword.lower()
-            l = len(keyword)
-            c = 0
-            f = []
-            v = 0
-            for i in range(len(Symptoms_list)):
-                a = Symptoms_list[i]
-                a = a.split()
-                for j in range(len(a)):
-                    c = 0
-                    v = 0
-                    for p in range(len(a[j])):
-                        b = a[j]
-                        if b[p] == "," or b[p] == ".":
-                            v = len(a[j])-1
-                    if l == len(a[j]) or l == v:
-                        for k in range(l):
-                            b = a[j]
-                            b = b.lower()
-                            if keyword[k] == b[k]:
-                                c+= 1
-                            if c == l:
-                                if len(f) == 0:
-                                    f.append(i)
-                                if len(f)!= 0 :
-                                    for z in range(len(f)):
-                                        if f[z] == i:
-                                            break
-                                        else:
-                                            f.append(i)
-
-            return f
-
-        def multi_word_search(Symptoms_list, keywords):
-            
-            keyword_to_indices = {}
-            for keyword in keywords:
-                keyword_to_indices[keyword] = word_search(Symptoms_list, keyword)
-            return keyword_to_indices
-
-        def Converter(Disease_prediction1):
-            Model_tmp = []
-            b = Disease_prediction1
-            for j in range (len(b)):
-                if b[j].isdigit():
-        
-                    if b[j+1].isdigit():
-                        Model_tmp.append(b[j]+b[j+1])
-
-                    else:
-                        if b[j-1].isdigit():
-                            continue
-                        Model_tmp.append(b[j])
-            return Model_tmp
-
-        
         Disease_prediction = Converter(list(self.Disease_prediction.text))
         Model_features = Converter(list(self.Model_features.text))
         DPA1 = Converter(list(self.DPA1.text))
@@ -4950,22 +3216,9 @@ class AQuestions24(GridLayout):
 
                 
 
-    def no_button(self , instancce):
+    def no_button(self , instance):
         offline = self.offline.text
-        def Converter(Disease_prediction1):
-            Model_tmp = []
-            b = Disease_prediction1
-            for j in range (len(b)):
-                if b[j].isdigit():
-        
-                    if b[j+1].isdigit():
-                        Model_tmp.append(b[j]+b[j+1])
 
-                    else:
-                        if b[j-1].isdigit():
-                            continue
-                        Model_tmp.append(b[j])
-            return Model_tmp
         Disease_prediction = Converter(list(self.Disease_prediction.text))
         Model_features = Converter(list(self.Model_features.text))
         DPA1 = Converter(list(self.DPA1.text))
@@ -5049,48 +3302,6 @@ class DiagnosisPageOffline(GridLayout):
 
     def submit_button(self , instance):
 
-        def word_search(Symptoms_list, keyword):
-    
-            keyword = keyword.lower()
-            l = len(keyword)
-            c = 0
-            f = []
-            v = 0
-            for i in range(len(Symptoms_list)):
-                a = Symptoms_list[i]
-                a = a.split()
-                for j in range(len(a)):
-                    c = 0
-                    v = 0
-                    for p in range(len(a[j])):
-                        b = a[j]
-                        if b[p] == "," or b[p] == ".":
-                            v = len(a[j])-1
-                    if l == len(a[j]) or l == v:
-                        for k in range(l):
-                            b = a[j]
-                            b = b.lower()
-                            if keyword[k] == b[k]:
-                                c+= 1
-                            if c == l:
-                                if len(f) == 0:
-                                    f.append(i)
-                                if len(f)!= 0 :
-                                    for z in range(len(f)):
-                                        if f[z] == i:
-                                            break
-                                        else:
-                                            f.append(i)
-        
-            return f
-
-        def multi_word_search(Symptoms_list, keywords):
-            
-            keyword_to_indices = {}
-            for keyword in keywords:
-                keyword_to_indices[keyword] = word_search(Symptoms_list, keyword)
-            return keyword_to_indices
-        
         with open('Main_symptom_list.txt') as input_file:
             Main_symptom_list = [line.strip() for line in input_file]
                 
@@ -5262,9 +3473,6 @@ class DiagnosisPage(GridLayout):
         user=user.lstrip('"')
         user=user.rstrip('"')
         
-        config = {
-          set up your firebase account and add its config
-        }
         
         firebase = pyrebase.initialize_app(config)
         db = firebase.database()
@@ -5289,9 +3497,6 @@ class DiagnosisPage(GridLayout):
         user=user.lstrip('"')
         user=user.rstrip('"')
         
-        config = {
-         set up your firebase account and add its config
-        }
         
         firebase = pyrebase.initialize_app(config)
         db = firebase.database()
@@ -5335,10 +3540,6 @@ class DiagnosisPage(GridLayout):
         user=user.lstrip('"')
         user=user.rstrip('"')
         
-        config = {
-          set up your firebase account and add its config
-        }
-        
         firebase = pyrebase.initialize_app(config)
         db = firebase.database()
         try:
@@ -5359,48 +3560,6 @@ class DiagnosisPage(GridLayout):
 
     def submit_button(self , instance):
 
-        def word_search(Symptoms_list, keyword):
-    
-            keyword = keyword.lower()
-            l = len(keyword)
-            c = 0
-            f = []
-            v = 0
-            for i in range(len(Symptoms_list)):
-                a = Symptoms_list[i]
-                a = a.split()
-                for j in range(len(a)):
-                    c = 0
-                    v = 0
-                    for p in range(len(a[j])):
-                        b = a[j]
-                        if b[p] == "," or b[p] == ".":
-                            v = len(a[j])-1
-                    if l == len(a[j]) or l == v:
-                        for k in range(l):
-                            b = a[j]
-                            b = b.lower()
-                            if keyword[k] == b[k]:
-                                c+= 1
-                            if c == l:
-                                if len(f) == 0:
-                                    f.append(i)
-                                if len(f)!= 0 :
-                                    for z in range(len(f)):
-                                        if f[z] == i:
-                                            break
-                                        else:
-                                            f.append(i)
-        
-            return f
-
-        def multi_word_search(Symptoms_list, keywords):
-            
-            keyword_to_indices = {}
-            for keyword in keywords:
-                keyword_to_indices[keyword] = word_search(Symptoms_list, keyword)
-            return keyword_to_indices
-        
         with open('Main_symptom_list.txt') as input_file:
             Main_symptom_list = [line.strip() for line in input_file]
                 
@@ -5611,10 +3770,7 @@ class AccountPage(GridLayout):
         user=user.rstrip("'")
         user=user.lstrip('"')
         user=user.rstrip('"')
-        
-        config = {
-          set up your firebase account and add its config
-        }
+
         
         firebase = pyrebase.initialize_app(config)
         db = firebase.database()
@@ -5657,10 +3813,6 @@ class AccountPage(GridLayout):
         user=user.rstrip("'")
         user=user.lstrip('"')
         user=user.rstrip('"')
-        
-        config = {
-         set up your firebase account and add its config
-        }
         
         firebase = pyrebase.initialize_app(config)
         db = firebase.database()
@@ -5789,10 +3941,6 @@ class YourRecord(GridLayout):
         user=user.lstrip('"')
         user=user.rstrip('"')
         
-        config = {
-          set up your firebase account and add its config
-        }
-        
         firebase = pyrebase.initialize_app(config)
         db = firebase.database()
         try:      
@@ -5821,9 +3969,6 @@ class YourRecord(GridLayout):
         user=user.lstrip('"')
         user=user.rstrip('"')
         
-        config = {
-         set up your firebase account and add its config
-        }
         
         firebase = pyrebase.initialize_app(config)
         db = firebase.database()
@@ -5935,9 +4080,6 @@ class AboutPage(GridLayout):
         user=user.lstrip('"')
         user=user.rstrip('"')
         
-        config = {
-          set up your firebase account and add its config
-        }
         
         firebase = pyrebase.initialize_app(config)
         db = firebase.database()
@@ -5975,9 +4117,6 @@ class AboutPage(GridLayout):
         user=user.lstrip('"')
         user=user.rstrip('"')
         
-        config = {
-         set up your firebase account and add its config
-        }
         
         firebase = pyrebase.initialize_app(config)
         db = firebase.database()
@@ -6004,10 +4143,6 @@ class AboutPage(GridLayout):
         user=user.rstrip("'")
         user=user.lstrip('"')
         user=user.rstrip('"')
-        
-        config = {
-         set up your firebase account and add its config
-        }
         
         firebase = pyrebase.initialize_app(config)
         db = firebase.database()
@@ -6130,49 +4265,6 @@ class Questions(GridLayout):
         self.Model_features.text = str(Model_features)
      
     def yes_button(self , instance):
-
-        def word_search(Symptoms_list, keyword):
-    
-            keyword = keyword.lower()
-            l = len(keyword)
-            c = 0
-            f = []
-            v = 0
-            for i in range(len(Symptoms_list)):
-                a = Symptoms_list[i]
-                a = a.split()
-                for j in range(len(a)):
-                    c = 0
-                    v = 0
-                    for p in range(len(a[j])):
-                        b = a[j]
-                        if b[p] == "," or b[p] == ".":
-                            v = len(a[j])-1
-                    if l == len(a[j]) or l == v:
-                        for k in range(l):
-                            b = a[j]
-                            b = b.lower()
-                            if keyword[k] == b[k]:
-                                c+= 1
-                            if c == l:
-                                if len(f) == 0:
-                                    f.append(i)
-                                if len(f)!= 0 :
-                                    for z in range(len(f)):
-                                        if f[z] == i:
-                                            break
-                                        else:
-                                            f.append(i)
-
-            return f
-
-        def multi_word_search(Symptoms_list, keywords):
-            
-            keyword_to_indices = {}
-            for keyword in keywords:
-                keyword_to_indices[keyword] = word_search(Symptoms_list, keyword)
-            return keyword_to_indices
-
         
         def Converter(Model_features):
             Model_tmp = []
@@ -6218,23 +4310,7 @@ class Questions(GridLayout):
         
 
 
-    def no_button(self , instance):
-        def Converter(Model_features):
-            Model_tmp = []
-            b = Model_features
-            for j in range (len(b)):
-                if b[j].isdigit():
-        
-                    if b[j+1].isdigit():
-                        Model_tmp.append(b[j]+b[j+1])
-
-                    else:
-                        if b[j-1].isdigit():
-                            continue
-                        Model_tmp.append(b[j])
-
-            return Model_tmp
-                    
+    def no_button(self , instance):                   
         
         Model_features1 = list(self.Model_features.text)
         Model_features = Converter(Model_features1)
@@ -6284,66 +4360,7 @@ class Questions1(GridLayout):
         self.Model_features.text = str(Model_features)
      
     def yes_button(self , instance):
-
-        def word_search(Symptoms_list, keyword):
-    
-            keyword = keyword.lower()
-            l = len(keyword)
-            c = 0
-            f = []
-            v = 0
-            for i in range(len(Symptoms_list)):
-                a = Symptoms_list[i]
-                a = a.split()
-                for j in range(len(a)):
-                    c = 0
-                    v = 0
-                    for p in range(len(a[j])):
-                        b = a[j]
-                        if b[p] == "," or b[p] == ".":
-                            v = len(a[j])-1
-                    if l == len(a[j]) or l == v:
-                        for k in range(l):
-                            b = a[j]
-                            b = b.lower()
-                            if keyword[k] == b[k]:
-                                c+= 1
-                            if c == l:
-                                if len(f) == 0:
-                                    f.append(i)
-                                if len(f)!= 0 :
-                                    for z in range(len(f)):
-                                        if f[z] == i:
-                                            break
-                                        else:
-                                            f.append(i)
-
-            return f
-
-        def multi_word_search(Symptoms_list, keywords):
-            
-            keyword_to_indices = {}
-            for keyword in keywords:
-                keyword_to_indices[keyword] = word_search(Symptoms_list, keyword)
-            return keyword_to_indices
         
-        def Converter(Model_features):
-            Model_tmp = []
-            b = Model_features
-            for j in range (len(b)):
-                if b[j].isdigit():
-        
-                    if b[j+1].isdigit():
-                        Model_tmp.append(b[j]+b[j+1])
-
-                    else:
-                        if b[j-1].isdigit():
-                            continue
-                        Model_tmp.append(b[j])
-
-            return Model_tmp
-                    
-
         tmp = self.tmp.text
         Model_features1 = list(self.Model_features.text)
         Model_features = Converter(Model_features1)
@@ -6372,23 +4389,7 @@ class Questions1(GridLayout):
 
 
     def no_button(self , instance):
-        def Converter(Model_features):
-            Model_tmp = []
-            b = Model_features
-            for j in range (len(b)):
-                if b[j].isdigit():
-        
-                    if b[j+1].isdigit():
-                        Model_tmp.append(b[j]+b[j+1])
-
-                    else:
-                        if b[j-1].isdigit():
-                            continue
-                        Model_tmp.append(b[j])
-
-            return Model_tmp
-                    
-        
+    
         Model_features1 = list(self.Model_features.text)
         Model_features = Converter(Model_features1)
         MDRDS.question_page2.update_info1(Model_features)
@@ -6438,63 +4439,6 @@ class Questions2(GridLayout):
      
     def yes_button(self , instance):
 
-        def word_search(Symptoms_list, keyword):
-    
-            keyword = keyword.lower()
-            l = len(keyword)
-            c = 0
-            f = []
-            v = 0
-            for i in range(len(Symptoms_list)):
-                a = Symptoms_list[i]
-                a = a.split()
-                for j in range(len(a)):
-                    c = 0
-                    v = 0
-                    for p in range(len(a[j])):
-                        b = a[j]
-                        if b[p] == "," or b[p] == ".":
-                            v = len(a[j])-1
-                    if l == len(a[j]) or l == v:
-                        for k in range(l):
-                            b = a[j]
-                            b = b.lower()
-                            if keyword[k] == b[k]:
-                                c+= 1
-                            if c == l:
-                                if len(f) == 0:
-                                    f.append(i)
-                                if len(f)!= 0 :
-                                    for z in range(len(f)):
-                                        if f[z] == i:
-                                            break
-                                        else:
-                                            f.append(i)
-
-            return f
-
-        def multi_word_search(Symptoms_list, keywords):
-            
-            keyword_to_indices = {}
-            for keyword in keywords:
-                keyword_to_indices[keyword] = word_search(Symptoms_list, keyword)
-            return keyword_to_indices
-        def Converter(Model_features):
-            Model_tmp = []
-            b = Model_features
-            for j in range (len(b)):
-                if b[j].isdigit():
-        
-                    if b[j+1].isdigit():
-                        Model_tmp.append(b[j]+b[j+1])
-
-                    else:
-                        if b[j-1].isdigit():
-                            continue
-                        Model_tmp.append(b[j])
-
-            return Model_tmp
-
         tmp = self.tmp.text
         Model_features1 = list(self.Model_features.text)
         Model_features = Converter(Model_features1)
@@ -6523,21 +4467,6 @@ class Questions2(GridLayout):
 
 
     def no_button(self , instance):
-        def Converter(Model_features):
-            Model_tmp = []
-            b = Model_features
-            for j in range (len(b)):
-                if b[j].isdigit():
-        
-                    if b[j+1].isdigit():
-                        Model_tmp.append(b[j]+b[j+1])
-
-                    else:
-                        if b[j-1].isdigit():
-                            continue
-                        Model_tmp.append(b[j])
-
-            return Model_tmp
         
         Model_features1 = list(self.Model_features.text)
         Model_features = Converter(Model_features1)
@@ -6588,64 +4517,6 @@ class Questions3(GridLayout):
      
     def yes_button(self , instance):
 
-        def word_search(Symptoms_list, keyword):
-    
-            keyword = keyword.lower()
-            l = len(keyword)
-            c = 0
-            f = []
-            v = 0
-            for i in range(len(Symptoms_list)):
-                a = Symptoms_list[i]
-                a = a.split()
-                for j in range(len(a)):
-                    c = 0
-                    v = 0
-                    for p in range(len(a[j])):
-                        b = a[j]
-                        if b[p] == "," or b[p] == ".":
-                            v = len(a[j])-1
-                    if l == len(a[j]) or l == v:
-                        for k in range(l):
-                            b = a[j]
-                            b = b.lower()
-                            if keyword[k] == b[k]:
-                                c+= 1
-                            if c == l:
-                                if len(f) == 0:
-                                    f.append(i)
-                                if len(f)!= 0 :
-                                    for z in range(len(f)):
-                                        if f[z] == i:
-                                            break
-                                        else:
-                                            f.append(i)
-
-            return f
-
-        def multi_word_search(Symptoms_list, keywords):
-            
-            keyword_to_indices = {}
-            for keyword in keywords:
-                keyword_to_indices[keyword] = word_search(Symptoms_list, keyword)
-            return keyword_to_indices
-        
-        def Converter(Model_features):
-            Model_tmp = []
-            b = Model_features
-            for j in range (len(b)):
-                if b[j].isdigit():
-        
-                    if b[j+1].isdigit():
-                        Model_tmp.append(b[j]+b[j+1])
-
-                    else:
-                        if b[j-1].isdigit():
-                            continue
-                        Model_tmp.append(b[j])
-
-            return Model_tmp
-
         tmp = self.tmp.text
         Model_features1 = list(self.Model_features.text)
         Model_features = Converter(Model_features1)
@@ -6674,21 +4545,6 @@ class Questions3(GridLayout):
 
 
     def no_button(self , instance):
-        def Converter(Model_features):
-            Model_tmp = []
-            b = Model_features
-            for j in range (len(b)):
-                if b[j].isdigit():
-        
-                    if b[j+1].isdigit():
-                        Model_tmp.append(b[j]+b[j+1])
-
-                    else:
-                        if b[j-1].isdigit():
-                            continue
-                        Model_tmp.append(b[j])
-
-            return Model_tmp
         
         Model_features1 = list(self.Model_features.text)
         Model_features = Converter(Model_features1)
@@ -6738,63 +4594,6 @@ class Questions4(GridLayout):
      
     def yes_button(self , instance):
 
-        def word_search(Symptoms_list, keyword):
-    
-            keyword = keyword.lower()
-            l = len(keyword)
-            c = 0
-            f = []
-            v = 0
-            for i in range(len(Symptoms_list)):
-                a = Symptoms_list[i]
-                a = a.split()
-                for j in range(len(a)):
-                    c = 0
-                    v = 0
-                    for p in range(len(a[j])):
-                        b = a[j]
-                        if b[p] == "," or b[p] == ".":
-                            v = len(a[j])-1
-                    if l == len(a[j]) or l == v:
-                        for k in range(l):
-                            b = a[j]
-                            b = b.lower()
-                            if keyword[k] == b[k]:
-                                c+= 1
-                            if c == l:
-                                if len(f) == 0:
-                                    f.append(i)
-                                if len(f)!= 0 :
-                                    for z in range(len(f)):
-                                        if f[z] == i:
-                                            break
-                                        else:
-                                            f.append(i)
-
-            return f
-
-        def multi_word_search(Symptoms_list, keywords):
-            
-            keyword_to_indices = {}
-            for keyword in keywords:
-                keyword_to_indices[keyword] = word_search(Symptoms_list, keyword)
-            return keyword_to_indices
-        def Converter(Model_features):
-            Model_tmp = []
-            b = Model_features
-            for j in range (len(b)):
-                if b[j].isdigit():
-        
-                    if b[j+1].isdigit():
-                        Model_tmp.append(b[j]+b[j+1])
-
-                    else:
-                        if b[j-1].isdigit():
-                            continue
-                        Model_tmp.append(b[j])
-
-            return Model_tmp
-
         tmp = self.tmp.text
         Model_features1 = list(self.Model_features.text)
         Model_features = Converter(Model_features1)
@@ -6823,22 +4622,7 @@ class Questions4(GridLayout):
 
 
     def no_button(self , instance):
-        def Converter(Model_features):
-            Model_tmp = []
-            b = Model_features
-            for j in range (len(b)):
-                if b[j].isdigit():
-        
-                    if b[j+1].isdigit():
-                        Model_tmp.append(b[j]+b[j+1])
 
-                    else:
-                        if b[j-1].isdigit():
-                            continue
-                        Model_tmp.append(b[j])
-
-            return Model_tmp
-        
         Model_features1 = list(self.Model_features.text)
         Model_features = Converter(Model_features1)
         MDRDS.question_page5.update_info1(Model_features)
@@ -6887,63 +4671,6 @@ class Questions5(GridLayout):
      
     def yes_button(self , instance):
 
-        def word_search(Symptoms_list, keyword):
-    
-            keyword = keyword.lower()
-            l = len(keyword)
-            c = 0
-            f = []
-            v = 0
-            for i in range(len(Symptoms_list)):
-                a = Symptoms_list[i]
-                a = a.split()
-                for j in range(len(a)):
-                    c = 0
-                    v = 0
-                    for p in range(len(a[j])):
-                        b = a[j]
-                        if b[p] == "," or b[p] == ".":
-                            v = len(a[j])-1
-                    if l == len(a[j]) or l == v:
-                        for k in range(l):
-                            b = a[j]
-                            b = b.lower()
-                            if keyword[k] == b[k]:
-                                c+= 1
-                            if c == l:
-                                if len(f) == 0:
-                                    f.append(i)
-                                if len(f)!= 0 :
-                                    for z in range(len(f)):
-                                        if f[z] == i:
-                                            break
-                                        else:
-                                            f.append(i)
-
-            return f
-
-        def multi_word_search(Symptoms_list, keywords):
-            
-            keyword_to_indices = {}
-            for keyword in keywords:
-                keyword_to_indices[keyword] = word_search(Symptoms_list, keyword)
-            return keyword_to_indices
-        def Converter(Model_features):
-            Model_tmp = []
-            b = Model_features
-            for j in range (len(b)):
-                if b[j].isdigit():
-        
-                    if b[j+1].isdigit():
-                        Model_tmp.append(b[j]+b[j+1])
-
-                    else:
-                        if b[j-1].isdigit():
-                            continue
-                        Model_tmp.append(b[j])
-
-            return Model_tmp
-
         tmp = self.tmp.text
         Model_features1 = list(self.Model_features.text)
         Model_features = Converter(Model_features1)
@@ -6972,22 +4699,7 @@ class Questions5(GridLayout):
 
 
     def no_button(self , instance):
-        def Converter(Model_features):
-            Model_tmp = []
-            b = Model_features
-            for j in range (len(b)):
-                if b[j].isdigit():
-        
-                    if b[j+1].isdigit():
-                        Model_tmp.append(b[j]+b[j+1])
 
-                    else:
-                        if b[j-1].isdigit():
-                            continue
-                        Model_tmp.append(b[j])
-
-            return Model_tmp
-        
         Model_features1 = list(self.Model_features.text)
         Model_features = Converter(Model_features1)
         MDRDS.question_page6.update_info1(Model_features)
@@ -7036,63 +4748,6 @@ class Questions6(GridLayout):
      
     def yes_button(self , instance):
 
-        def word_search(Symptoms_list, keyword):
-    
-            keyword = keyword.lower()
-            l = len(keyword)
-            c = 0
-            f = []
-            v = 0
-            for i in range(len(Symptoms_list)):
-                a = Symptoms_list[i]
-                a = a.split()
-                for j in range(len(a)):
-                    c = 0
-                    v = 0
-                    for p in range(len(a[j])):
-                        b = a[j]
-                        if b[p] == "," or b[p] == ".":
-                            v = len(a[j])-1
-                    if l == len(a[j]) or l == v:
-                        for k in range(l):
-                            b = a[j]
-                            b = b.lower()
-                            if keyword[k] == b[k]:
-                                c+= 1
-                            if c == l:
-                                if len(f) == 0:
-                                    f.append(i)
-                                if len(f)!= 0 :
-                                    for z in range(len(f)):
-                                        if f[z] == i:
-                                            break
-                                        else:
-                                            f.append(i)
-
-            return f
-
-        def multi_word_search(Symptoms_list, keywords):
-            
-            keyword_to_indices = {}
-            for keyword in keywords:
-                keyword_to_indices[keyword] = word_search(Symptoms_list, keyword)
-            return keyword_to_indices
-        def Converter(Model_features):
-            Model_tmp = []
-            b = Model_features
-            for j in range (len(b)):
-                if b[j].isdigit():
-        
-                    if b[j+1].isdigit():
-                        Model_tmp.append(b[j]+b[j+1])
-
-                    else:
-                        if b[j-1].isdigit():
-                            continue
-                        Model_tmp.append(b[j])
-
-            return Model_tmp
-
         tmp = self.tmp.text
         Model_features1 = list(self.Model_features.text)
         Model_features = Converter(Model_features1)
@@ -7121,21 +4776,6 @@ class Questions6(GridLayout):
 
 
     def no_button(self , instance):
-        def Converter(Model_features):
-            Model_tmp = []
-            b = Model_features
-            for j in range (len(b)):
-                if b[j].isdigit():
-        
-                    if b[j+1].isdigit():
-                        Model_tmp.append(b[j]+b[j+1])
-
-                    else:
-                        if b[j-1].isdigit():
-                            continue
-                        Model_tmp.append(b[j])
-
-            return Model_tmp
         
         Model_features1 = list(self.Model_features.text)
         Model_features = Converter(Model_features1)
@@ -7185,62 +4825,6 @@ class Questions7(GridLayout):
      
     def yes_button(self , instance):
 
-        def word_search(Symptoms_list, keyword):
-    
-            keyword = keyword.lower()
-            l = len(keyword)
-            c = 0
-            f = []
-            v = 0
-            for i in range(len(Symptoms_list)):
-                a = Symptoms_list[i]
-                a = a.split()
-                for j in range(len(a)):
-                    c = 0
-                    v = 0
-                    for p in range(len(a[j])):
-                        b = a[j]
-                        if b[p] == "," or b[p] == ".":
-                            v = len(a[j])-1
-                    if l == len(a[j]) or l == v:
-                        for k in range(l):
-                            b = a[j]
-                            b = b.lower()
-                            if keyword[k] == b[k]:
-                                c+= 1
-                            if c == l:
-                                if len(f) == 0:
-                                    f.append(i)
-                                if len(f)!= 0 :
-                                    for z in range(len(f)):
-                                        if f[z] == i:
-                                            break
-                                        else:
-                                            f.append(i)
-
-            return f
-
-        def multi_word_search(Symptoms_list, keywords):
-            
-            keyword_to_indices = {}
-            for keyword in keywords:
-                keyword_to_indices[keyword] = word_search(Symptoms_list, keyword)
-            return keyword_to_indices
-        def Converter(Model_features):
-            Model_tmp = []
-            b = Model_features
-            for j in range (len(b)):
-                if b[j].isdigit():
-        
-                    if b[j+1].isdigit():
-                        Model_tmp.append(b[j]+b[j+1])
-
-                    else:
-                        if b[j-1].isdigit():
-                            continue
-                        Model_tmp.append(b[j])
-
-            return Model_tmp
         tmp = self.tmp.text
         Model_features1 = list(self.Model_features.text)
         Model_features = Converter(Model_features1)
@@ -7259,31 +4843,13 @@ class Questions7(GridLayout):
                 break
             Model_features1.append(str(Features_temp[keywords[i]][0]))
 
-        Model_features.append(Model_features1[0])
-
-        
-
+        Model_features.append(Model_features1[0])      
         MDRDS.question_page8.update_info1(Model_features)
         MDRDS.screen_manager.current = "Questions8"
         
 
 
     def no_button(self , instance):
-        def Converter(Model_features):
-            Model_tmp = []
-            b = Model_features
-            for j in range (len(b)):
-                if b[j].isdigit():
-        
-                    if b[j+1].isdigit():
-                        Model_tmp.append(b[j]+b[j+1])
-
-                    else:
-                        if b[j-1].isdigit():
-                            continue
-                        Model_tmp.append(b[j])
-
-            return Model_tmp
         
         Model_features1 = list(self.Model_features.text)
         Model_features = Converter(Model_features1)
@@ -7333,63 +4899,6 @@ class Questions8(GridLayout):
      
     def yes_button(self , instance):
 
-        def word_search(Symptoms_list, keyword):
-    
-            keyword = keyword.lower()
-            l = len(keyword)
-            c = 0
-            f = []
-            v = 0
-            for i in range(len(Symptoms_list)):
-                a = Symptoms_list[i]
-                a = a.split()
-                for j in range(len(a)):
-                    c = 0
-                    v = 0
-                    for p in range(len(a[j])):
-                        b = a[j]
-                        if b[p] == "," or b[p] == ".":
-                            v = len(a[j])-1
-                    if l == len(a[j]) or l == v:
-                        for k in range(l):
-                            b = a[j]
-                            b = b.lower()
-                            if keyword[k] == b[k]:
-                                c+= 1
-                            if c == l:
-                                if len(f) == 0:
-                                    f.append(i)
-                                if len(f)!= 0 :
-                                    for z in range(len(f)):
-                                        if f[z] == i:
-                                            break
-                                        else:
-                                            f.append(i)
-
-            return f
-
-        def multi_word_search(Symptoms_list, keywords):
-            
-            keyword_to_indices = {}
-            for keyword in keywords:
-                keyword_to_indices[keyword] = word_search(Symptoms_list, keyword)
-            return keyword_to_indices
-        def Converter(Model_features):
-            Model_tmp = []
-            b = Model_features
-            for j in range (len(b)):
-                if b[j].isdigit():
-        
-                    if b[j+1].isdigit():
-                        Model_tmp.append(b[j]+b[j+1])
-
-                    else:
-                        if b[j-1].isdigit():
-                            continue
-                        Model_tmp.append(b[j])
-
-            return Model_tmp
-
         tmp = self.tmp.text
         Model_features1 = list(self.Model_features.text)
         Model_features = Converter(Model_features1)
@@ -7418,21 +4927,6 @@ class Questions8(GridLayout):
 
 
     def no_button(self , instance):
-        def Converter(Model_features):
-            Model_tmp = []
-            b = Model_features
-            for j in range (len(b)):
-                if b[j].isdigit():
-        
-                    if b[j+1].isdigit():
-                        Model_tmp.append(b[j]+b[j+1])
-
-                    else:
-                        if b[j-1].isdigit():
-                            continue
-                        Model_tmp.append(b[j])
-
-            return Model_tmp
         
         Model_features1 = list(self.Model_features.text)
         Model_features = Converter(Model_features1)
@@ -7482,63 +4976,6 @@ class Questions9(GridLayout):
      
     def yes_button(self , instance):
 
-        def word_search(Symptoms_list, keyword):
-    
-            keyword = keyword.lower()
-            l = len(keyword)
-            c = 0
-            f = []
-            v = 0
-            for i in range(len(Symptoms_list)):
-                a = Symptoms_list[i]
-                a = a.split()
-                for j in range(len(a)):
-                    c = 0
-                    v = 0
-                    for p in range(len(a[j])):
-                        b = a[j]
-                        if b[p] == "," or b[p] == ".":
-                            v = len(a[j])-1
-                    if l == len(a[j]) or l == v:
-                        for k in range(l):
-                            b = a[j]
-                            b = b.lower()
-                            if keyword[k] == b[k]:
-                                c+= 1
-                            if c == l:
-                                if len(f) == 0:
-                                    f.append(i)
-                                if len(f)!= 0 :
-                                    for z in range(len(f)):
-                                        if f[z] == i:
-                                            break
-                                        else:
-                                            f.append(i)
-
-            return f
-
-        def multi_word_search(Symptoms_list, keywords):
-            
-            keyword_to_indices = {}
-            for keyword in keywords:
-                keyword_to_indices[keyword] = word_search(Symptoms_list, keyword)
-            return keyword_to_indices
-        def Converter(Model_features):
-            Model_tmp = []
-            b = Model_features
-            for j in range (len(b)):
-                if b[j].isdigit():
-        
-                    if b[j+1].isdigit():
-                        Model_tmp.append(b[j]+b[j+1])
-
-                    else:
-                        if b[j-1].isdigit():
-                            continue
-                        Model_tmp.append(b[j])
-
-            return Model_tmp
-
         tmp = self.tmp.text
         Model_features1 = list(self.Model_features.text)
         Model_features = Converter(Model_features1)
@@ -7567,21 +5004,6 @@ class Questions9(GridLayout):
 
 
     def no_button(self , instance):
-        def Converter(Model_features):
-            Model_tmp = []
-            b = Model_features
-            for j in range (len(b)):
-                if b[j].isdigit():
-        
-                    if b[j+1].isdigit():
-                        Model_tmp.append(b[j]+b[j+1])
-
-                    else:
-                        if b[j-1].isdigit():
-                            continue
-                        Model_tmp.append(b[j])
-
-            return Model_tmp
         
         Model_features1 = list(self.Model_features.text)
         Model_features = Converter(Model_features1)
@@ -7627,22 +5049,7 @@ class Resulto(GridLayout):
         self.DPA4.text = str(DPA4)
 
     def result_button(self , instance):
-        def Converter(Disease_prediction1):
-            Model_tmp = []
-            b = Disease_prediction1
-            for j in range (len(b)):
-                if b[j].isdigit():
-        
-                    if b[j+1].isdigit():
-                        Model_tmp.append(b[j]+b[j+1])
-
-                    else:
-                        if b[j-1].isdigit():
-                            continue
-                        Model_tmp.append(b[j])
-            return Model_tmp
-
-        
+     
         Disease_prediction1 = Converter(list(self.Disease_prediction.text))
         Model_features = Converter(list(self.Model_features.text))
         DPA1 = Converter(list(self.DPA1.text))
@@ -7741,22 +5148,7 @@ class Result(GridLayout):
         self.DPA4.text = str(DPA4)
 
     def result_button(self , instance):
-        def Converter(Disease_prediction1):
-            Model_tmp = []
-            b = Disease_prediction1
-            for j in range (len(b)):
-                if b[j].isdigit():
-        
-                    if b[j+1].isdigit():
-                        Model_tmp.append(b[j]+b[j+1])
-
-                    else:
-                        if b[j-1].isdigit():
-                            continue
-                        Model_tmp.append(b[j])
-            return Model_tmp
-
-        
+   
         Disease_prediction1 = Converter(list(self.Disease_prediction.text))
         Model_features = Converter(list(self.Model_features.text))
         DPA1 = Converter(list(self.DPA1.text))
@@ -7811,7 +5203,6 @@ class Result(GridLayout):
                         lr.append(key)
                         break
                     
-
         gr1 = gr
         mr1 = mr
         br1 = br
@@ -7859,8 +5250,6 @@ class Result(GridLayout):
         x = datetime.datetime.now()
         b = str(x.strftime("%x"))
         c = str(x.strftime("%X"))
-        config = {    set up your firebase account and add its config
-                                }
         
         firebase = pyrebase.initialize_app(config)
         auth = firebase.auth()
@@ -7969,10 +5358,6 @@ class Result1(GridLayout):
         mr = self.mr.text
         br = self.br.text
         MF = self.MF.text
-        
-        config = {
-          set up your firebase account and add its config
-        }
         
         firebase = pyrebase.initialize_app(config)
         db = firebase.database()
@@ -8170,10 +5555,6 @@ class Doctor(GridLayout):
         user=user.lstrip('"')
         user=user.rstrip('"')
         
-        config = {
-          set up your firebase account and add its config
-        }
-        
         firebase = pyrebase.initialize_app(config)
         db = firebase.database()
         try:      
@@ -8202,10 +5583,6 @@ class Doctor(GridLayout):
         user=user.rstrip("'")
         user=user.lstrip('"')
         user=user.rstrip('"')
-        
-        config = {
-          set up your firebase account and add its config
-        }
         
         firebase = pyrebase.initialize_app(config)
         db = firebase.database()
