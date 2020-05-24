@@ -1,4 +1,4 @@
-# MedApp-V2.0
+# MedApp-V2.1
 Introduction
 ------------
 In this app you can predict your disease by giving the symptom that the person is suffering.
@@ -72,6 +72,7 @@ Fixing Diagnosis Error
 
 Changelog
 -------
+-Changelog 2.1 >>> Optimised The App for Faster Loading.<br/>
 -Changelog 2.0 >>> Added Graphics to UI.<br/>
 -Changelog 1.9 >>> DocBot Added NMT Model.<br />
 -Changelog 1.8 >>> SQL User Database System Added.<br />
