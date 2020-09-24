@@ -35,7 +35,7 @@ You are ready to run the MedApp.
 
 Run Main.py
 
-Link to the project file ---- https://mega.nz/file/29FzlYqJ#ZYzAcF8NQcRYM99njMAQ8jHd4SAx-IFqGGzz_1t4OsI
+Link to the project file ----  ```https://mega.nz/file/29FzlYqJ#ZYzAcF8NQcRYM99njMAQ8jHd4SAx-IFqGGzz_1t4OsI```
 
 Setting
 -------
