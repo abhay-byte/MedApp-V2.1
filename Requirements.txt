@@ -4,6 +4,7 @@ scikit_learn
 scipy
 joblib
 kivy
+docutils pygments pypiwin32 kivy_deps.sdl2==0.1.* kivy_deps.glew==0.1.*
 pyrebase
 tensorflow==1.12.0
 tqdm
