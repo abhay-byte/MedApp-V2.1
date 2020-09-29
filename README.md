@@ -5,7 +5,7 @@ Introduction
 In this app you can predict your disease by giving the symptom that the person is suffering.
 The UI of this app is created using kivy. The prediction of the disease is done using Machine Learning.
 You can also talk to alveron The Docbot who is a Emotion State Enhancer ChatBot Made with Nmt model chatbot using deep learing.
-The Authentication system and DataBase is made with Google's FireBase.
+The Authentication system and DataBase is made with Google's FireBase and SQL.
 
 # Contributors
 ---------------
