@@ -14,7 +14,7 @@ This is a project By Abhay Raj, Roshan Alex and Aneesh Kumar of Kerala School Vi
 
 Installation
 ------------
-Use Python Version 3.6+. Donot use the Latest Version. Be at 3.6 .<br/>
+Use Python Version 3.6+(AMD 64, To use tensorflow). Donot use the Latest Version. Be at 3.6 .<br/>
 Make sure you have already Git LFS to download the extra content of Medapp. You can also skip this step to not download docbot data file. Link is given below.<br/>
 
 Download Git LFS for Windows : https://packagecloud.io/github/git-lfs/install<br/>
