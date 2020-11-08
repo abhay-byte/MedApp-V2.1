@@ -86,7 +86,7 @@ def Converter(Disease_prediction1):
                 Model_tmp.append(b[j])
     return Model_tmp
 
-config = { Add your FireBase Config here and thats all
+config = { Add your FireBase Config here 
                                 }
 
 Builder.load_string("""
