@@ -86,7 +86,7 @@ def Converter(Disease_prediction1):
                 Model_tmp.append(b[j])
     return Model_tmp
 
-config = { Add your FireBase Config here 
+config = { Add your FireBase Config here
                                 }
 
 Builder.load_string("""
@@ -5361,31 +5361,44 @@ class Result1(GridLayout):
         
         firebase = pyrebase.initialize_app(config)
         db = firebase.database()
-        try:
-            username = db.child("MedApp").child("Users").child(user).get().val()
-            time = db.child("MedApp").child("Time").child(user).get().val()
-            detail = db.child("MedApp").child("Details").child("AgeGender").child(user).get().val()
-            diagnosis = db.child("MedApp").child("Diagnosis").child("Disease").child(user).child("GR").get().val()
-            diagnosis1 = db.child("MedApp").child("Diagnosis").child("Disease").child(user).child("MR").get().val()
-            diagnosis2 = db.child("MedApp").child("Diagnosis").child("Disease").child(user).child("BR").get().val()
+        
+        username = db.child("MedApp").child("Users").child(user).get().val()
+        time = db.child("MedApp").child("Time").child(user).get().val()
+        detail = db.child("MedApp").child("Details").child("AgeGender").child(user).get().val()
+        diagnosis = db.child("MedApp").child("Diagnosis").child("Disease").child(user).child("GR").get().val()
+        diagnosis1 = db.child("MedApp").child("Diagnosis").child("Disease").child(user).child("MR").get().val()
+        diagnosis2 = db.child("MedApp").child("Diagnosis").child("Disease").child(user).child("BR").get().val()
                 
-            username = dict(username)
-            time = dict(time)
-            detail = dict(detail)
-            diagnosis = dict(diagnosis)
-            diagnosis1 = dict(diagnosis1)
-            diagnosis2 = dict(diagnosis2)
+        username = dict(username)
+        time = dict(time)
+        detail = dict(detail)
+        diagnosis = dict(diagnosis)
+        diagnosis1 = dict(diagnosis1)
+        diagnosis2 = dict(diagnosis2)
 
-            MDRDS.your_record.user_update(username)
-            MDRDS.your_record.time_update(time)
-            MDRDS.your_record.detail_update(detail)
-            MDRDS.your_record.diagnosis_update(diagnosis)
-            MDRDS.your_record.diagnosis_update1(diagnosis1)
-            MDRDS.your_record.diagnosis_update2(diagnosis2)
-            MDRDS.screen_manager.current = "Record"
+        MDRDS.your_record.user_update(username)
+        MDRDS.your_record.time_update(time)
+        MDRDS.your_record.detail_update(detail)
+        MDRDS.your_record.diagnosis_update(diagnosis)
+        MDRDS.your_record.diagnosis_update1(diagnosis1)
+        MDRDS.your_record.diagnosis_update2(diagnosis2)
+        MDRDS.screen_manager.current = "Record"
+        import random
+        id=random.randint(1034,9034)
+        ini_dict = detail
+        Age, Gender = zip(*ini_dict.items()) 
+  
+ 
+        
 
-        except:
-            MDRDS.screen_manager.current = "ErrorI"
+        import sqlite3
+        conn=sqlite3.connect('MedApp_database.db')
+        conn.execute("INSERT INTO PATIENTS (ID,NAME,AGE,GENDER,MODEL_FEATURES,GR,MR,BR) VALUES(?,?,?,?,?,?,?,?)",(id, user, str(Age),str(Gender), MF, gr, mr, br));
+        conn.commit()            
+                     
+
+        
+        #MDRDS.screen_manager.current = "ErrorI"
 
         
 class Result1o(GridLayout):
