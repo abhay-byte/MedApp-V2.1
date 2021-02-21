@@ -36,6 +36,7 @@ You are ready to run the MedApp.
 Run Main.py
 
 Link to the project file ----  https://mega.nz/file/29FzlYqJ#ZYzAcF8NQcRYM99njMAQ8jHd4SAx-IFqGGzz_1t4OsI
+
 Link to download windows version of app ---- https://1drv.ms/u/s!AtrtyS4KYE2TggejGT6QNMFwlYUz?e=xaNPGR
 
 Setting
